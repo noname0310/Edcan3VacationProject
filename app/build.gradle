@@ -39,6 +39,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:21.5.0'
     implementation 'com.google.android.material:material:1.2.0-alpha02'
     implementation 'com.airbnb.android:lottie:3.3.1'
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
