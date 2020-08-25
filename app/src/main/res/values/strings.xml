@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Edcan3VacationProject</string>
     <string name="chatty">CHATTY</string>
+    <string name="id">ID</string>
+    <string name="pw">PW</string>
 </resources>
