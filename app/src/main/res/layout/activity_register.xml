@@ -1,9 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".RegisterActivity"
+        android:padding="16dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context=".RegisterActivity"
+            tools:layout_editor_absoluteX="16dp">
+
+            <Button
+                android:id="@+id/btn_regi_signup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+
+                android:backgroundTint="@color/colorPrimary"
+
+                android:text="회원가입"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edt_regi_passwordcheck" />
+
+            <TextView
+                android:id="@id/txt_regi_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/edt_regi_name" />
+
+            <EditText
+                android:id="@+id/edt_regi_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="edcan@mail.com"
+                android:inputType="textEmailAddress"
+                android:padding="16dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_regi_email" />
+
+            <TextView
+                android:id="@+id/txt_regi_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="비밀번호"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/edt_regi_email" />
+
+            <EditText
+                android:id="@+id/edt_regi_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:padding="16dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_regi_password" />
+
+            <TextView
+                android:id="@+id/txt_regi_passwordcheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="비밀번호 재입력"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/edt_regi_password" />
+
+            <EditText
+                android:id="@+id/edt_regi_passwordcheck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:padding="16dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.666"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_regi_passwordcheck" />
+
+            <TextView
+                android:id="@+id/txt_regi_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이름"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/edt_regi_id" />
+
+            <EditText
+
+                android:id="@+id/edt_regi_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="에드캔"
+
+                android:padding="16dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_regi_name"/>
+            <TextView
+                android:id="@+id/txt_regi_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ID"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+
+                android:id="@+id/edt_regi_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="edcan"
+
+                android:padding="16dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_regi_id"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
