@@ -8,14 +8,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".LoginActivity">
+        <ImageView
+            android:id="@+id/img_chatty_login"
+            android:layout_width="136dp"
+            android:layout_height="136dp"
+            android:src="@drawable/chatty_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/constraintLayout_login2"
+            app:layout_constraintVertical_chainStyle="packed"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+            android:id="@+id/constraintLayout_login2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/img_chatty_login">
 
             <EditText
                 android:id="@+id/edittext_id_login"
@@ -60,7 +70,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout_login2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
