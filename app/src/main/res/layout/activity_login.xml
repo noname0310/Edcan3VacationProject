@@ -2,7 +2,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="id"
+            type="String" />
 
+        <variable
+            name="pw"
+            type="String" />
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout_login"
         android:layout_width="match_parent"
@@ -32,6 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/id"
+                android:text="@={id}"
                 android:padding="12dp"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/edittext_pw_login"
@@ -44,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/pw"
+                android:text="@={pw}"
                 android:padding="12dp"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@id/button_login_login"
@@ -71,6 +81,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout_login2" />
+
+        <Button
+            android:id="@+id/btn_login_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/white"
+            android:text="화원가입"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_login_fgt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_facebook_login"
+            app:layout_constraintVertical_chainStyle="packed"/>
+
+        <Button
+            android:id="@+id/btn_login_fgt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/white"
+            android:text="비밀번호를 잊으셨나요"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_login_signup"
+            app:layout_constraintTop_toBottomOf="@+id/button_facebook_login" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
