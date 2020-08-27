@@ -3,6 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="id"
+            type="String" />
+        <variable
+            name="name"
+            type="String" />
+        <variable
+            name="pw"
+            type="String" />
+        <variable
+            name="pwcheck"
+            type="String" />
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

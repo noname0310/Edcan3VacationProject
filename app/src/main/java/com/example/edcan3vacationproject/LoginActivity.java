@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLoginSignup.setOnClickListener(view -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
-        setContentView(R.layout.activity_login);
+
     }
     private void login(String id, String pw) {
         if ( id.isEmpty() || pw.isEmpty()) {
