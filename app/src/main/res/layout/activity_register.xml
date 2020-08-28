@@ -11,6 +11,9 @@
             name="name"
             type="String" />
         <variable
+            name="email"
+            type="String" />
+        <variable
             name="pw"
             type="String" />
         <variable
@@ -58,6 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="edcan@mail.com"
+                android:text="@={email}"
                 android:inputType="textEmailAddress"
                 android:padding="16dp"
                 android:textSize="16sp"
@@ -78,6 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
+                android:text="@={pw}"
                 android:padding="16dp"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -98,6 +103,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:padding="16dp"
+                android:text="@={pwcheck}"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.666"
@@ -118,7 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="에드캔"
-
+                android:text="@={name}"
                 android:padding="16dp"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -138,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="edcan"
-
+                android:text="@={id}"
                 android:padding="16dp"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
