@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="id"
+            name="email"
             type="String" />
 
         <variable
@@ -43,9 +43,9 @@
                 android:id="@+id/edittext_id_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/id"
+                android:hint="email"
                 android:padding="12dp"
-                android:text="@={id}"
+                android:text="@={email}"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/edittext_pw_login"
                 app:layout_constraintStart_toStartOf="parent"

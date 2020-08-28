@@ -21,31 +21,31 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        binding.setId("");
+        binding.setEmail("");
         binding.setPw("");
 
         binding.buttonLoginLogin.setOnClickListener(view -> {
-            login(binding.getId(), binding.getPw());
+            login(binding.getEmail(), binding.getPw());
         });
         binding.btnLoginSignup.setOnClickListener(view -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
 
     }
-    private void login(String id, String pw) {
-        if ( id.isEmpty() || pw.isEmpty()) {
+    private void login(String email, String pw) {
+        if ( email.isEmpty() || pw.isEmpty()) {
             Toast.makeText(this, "빈칸을 입력해주세요", Toast.LENGTH_SHORT).show();
             return;
         }
         firebaseFirestore
                 .collection("users")
-                .document(id)
+                .document(email)
                 .get()
                 .addOnSuccessListener(document -> {
                     firebaseAuth
-                            .signInWithEmailAndPassword(id, pw)
+                            .signInWithEmailAndPassword(email, pw)
                             .addOnSuccessListener(runnable1 -> {
-                              //  UserCache.setUser(this, document.toObject(UserModel.class));
+                                UserCache.setUser(this, document.toObject(UserModel.class));
                                 startActivity(new Intent( LoginActivity.this, MainActivity.class));
                                 finish();
                             })
