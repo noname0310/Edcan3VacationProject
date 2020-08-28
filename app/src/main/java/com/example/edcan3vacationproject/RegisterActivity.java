@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.edcan3vacationproject.databinding.ActivityRegisterBinding;
@@ -30,9 +31,11 @@ public class RegisterActivity extends AppCompatActivity {
         binding.setEmail("");
         binding.setPw("");
         binding.setPwcheck("");
+        binding.navigationIcon.setOnClickListener(view -> finish());
         binding.btnRegiSignup.setOnClickListener(view -> {
             register(binding.getId(), binding.getName(), binding.getEmail(), binding.getPw(), binding.getPwcheck());
         });
+
     }
 
     private void register(String id, String name, String email, String pw, String pwcheck) {
