@@ -4,37 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="id"
             type="String" />
+
         <variable
             name="name"
             type="String" />
+
         <variable
             name="email"
             type="String" />
+
         <variable
             name="pw"
             type="String" />
+
         <variable
             name="pwcheck"
             type="String" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".RegisterActivity"
-        android:padding="16dp">
+        tools:context=".RegisterActivity">
+
         <androidx.appcompat.widget.Toolbar
-            app:titleTextAppearance="@style/TitleBarTextAppearance"
-            android:id="@+id/toolbar_new_memo"
+            android:id="@+id/toolbar_register"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
+            android:background="@color/colorPrimary1"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-            app:title="Add Memo" />
+           android:theme="@style/TitleBarAppearance">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:textColor="#dbefed"
+                android:text="회원가입"
+                android:fontFamily=""/>
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -68,9 +86,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="edcan@mail.com"
-                android:text="@={email}"
                 android:inputType="textEmailAddress"
                 android:padding="16dp"
+                android:text="@={email}"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -89,8 +107,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:text="@={pw}"
                 android:padding="16dp"
+                android:text="@={pw}"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -130,12 +148,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="에드캔"
-                android:text="@={name}"
                 android:padding="16dp"
+                android:text="@={name}"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_regi_name"/>
+                app:layout_constraintTop_toBottomOf="@id/txt_regi_name" />
+
             <TextView
                 android:id="@+id/txt_regi_id"
                 android:layout_width="wrap_content"
@@ -150,12 +169,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="edcan"
-                android:text="@={id}"
                 android:padding="16dp"
+                android:text="@={id}"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_regi_id"/>
+                app:layout_constraintTop_toBottomOf="@id/txt_regi_id" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
