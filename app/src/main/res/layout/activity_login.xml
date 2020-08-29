@@ -59,65 +59,41 @@
             app:layout_constraintVertical_bias="0.596">
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:backgroundTint="@color/colorPrimary1"
-                app:layout_constraintTop_toBottomOf="@+id/edittext_id_login"
-                tools:layout_editor_absoluteX="24dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:backgroundTint="@color/colorPrimary1"
-                app:layout_constraintTop_toBottomOf="@id/edittext_pw_login"
-                tools:layout_editor_absoluteX="24dp" />
-
-            <ImageView
-                android:id="@+id/img_person_logo"
-                android:layout_width="30dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_baseline_person_24"
-                app:layout_constraintBottom_toBottomOf="@+id/edittext_id_login"
-                app:layout_constraintEnd_toStartOf="@id/edittext_id_login"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/edittext_id_login" />
-
-            <ImageView
-                android:id="@+id/img_pw_logo"
-                android:layout_width="30dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_baseline_lock_24"
-                app:layout_constraintBottom_toBottomOf="@+id/edittext_pw_login"
-                app:layout_constraintEnd_toStartOf="@id/edittext_pw_login"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/edittext_pw_login" />
-
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edittext_id_login"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_baseline_person_24"
+                android:drawableTint="@color/colorPrimary1"
                 android:hint="Email"
-                android:padding="12dp"
+                android:drawablePadding="10dp"
+                android:outlineAmbientShadowColor="@color/colorPrimary1"
+                android:padding="15dp"
                 android:text="@={email}"
                 android:textAllCaps="false"
                 android:textColor="#191a33"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/edittext_pw_login"
-                app:layout_constraintStart_toEndOf="@id/img_person_logo"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="54dp" />
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edittext_pw_login"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:drawablePadding="10dp"
+                android:drawableLeft="@drawable/ic_baseline_lock_24"
+                android:drawableTint="@color/colorPrimary1"
                 android:hint="@string/pw"
-                android:padding="12dp"
+                android:outlineAmbientShadowColor="@color/colorPrimary1"
+                android:padding="15dp"
                 android:text="@={pw}"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@id/button_login_login"
-                app:layout_constraintStart_toEndOf="@+id/img_pw_logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/edittext_id_login" />
 
             <Button
@@ -142,9 +118,9 @@
             android:id="@+id/twitter_login"
             android:layout_width="60dp"
             android:layout_height="60dp"
-
+            android:background="@drawable/twitter"
             android:gravity="center"
-            android:text="qwaer"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/google_login"
             app:layout_constraintHorizontal_bias="0.5"
@@ -156,19 +132,19 @@
             android:id="@+id/google_login"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:text="qwer"
+            android:background="@drawable/google"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/twitter_login"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout_login2"
-            app:layout_constraintVertical_bias="0.198" />
+            app:layout_constraintVertical_bias="0.194" />
 
         <Button
             android:id="@+id/facebook_login"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:text="ewqr"
+            android:background="@drawable/facebook"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/twitter_login"
             app:layout_constraintHorizontal_bias="0.5"
@@ -182,24 +158,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="비밀번호를 잊으셨나요?"
+            android:textColor="@color/colorPrimary1"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.384"
+            app:layout_constraintEnd_toStartOf="@+id/view"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/twitter_login"
             app:layout_constraintVertical_bias="0.182" />
 
-        <Button
+        <View
+            app:layout_constraintVertical_bias="0.182"
+            android:id="@+id/view"
+            android:layout_width="2dp"
+            android:layout_height="26dp"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="6dp"
+            android:background="@color/colorPrimary1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_login_signup"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/editText2"
+            app:layout_constraintTop_toBottomOf="@+id/twitter_login" />
+
+        <TextView
             android:id="@+id/btn_login_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="회원가입"
+            android:textColor="@color/colorPrimary1"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.086"
-            app:layout_constraintStart_toEndOf="@+id/editText2"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/view"
             app:layout_constraintTop_toBottomOf="@+id/twitter_login"
             app:layout_constraintVertical_bias="0.182" />
     </androidx.constraintlayout.widget.ConstraintLayout>
