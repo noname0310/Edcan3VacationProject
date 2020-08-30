@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\noname\\Projects\\GitHub\\Edcan3VacationProject\\server\\TinyChatServer\\TinyChatServer\\TinyChatServer.csproj": {}
+    "D:\\noname\\Projects\\GitHub\\Edcan3VacationProject\\server\\TinyChatServer\\TinyChatServer.csproj": {}
   },
   "projects": {
-    "D:\\noname\\Projects\\GitHub\\Edcan3VacationProject\\server\\TinyChatServer\\TinyChatServer\\TinyChatServer.csproj": {
+    "D:\\noname\\Projects\\GitHub\\Edcan3VacationProject\\server\\TinyChatServer\\TinyChatServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\noname\\Projects\\GitHub\\Edcan3VacationProject\\server\\TinyChatServer\\TinyChatServer\\TinyChatServer.csproj",
+        "projectUniqueName": "D:\\noname\\Projects\\GitHub\\Edcan3VacationProject\\server\\TinyChatServer\\TinyChatServer.csproj",
         "projectName": "TinyChatServer",
-        "projectPath": "D:\\noname\\Projects\\GitHub\\Edcan3VacationProject\\server\\TinyChatServer\\TinyChatServer\\TinyChatServer.csproj",
+        "projectPath": "D:\\noname\\Projects\\GitHub\\Edcan3VacationProject\\server\\TinyChatServer\\TinyChatServer.csproj",
         "packagesPath": "C:\\Users\\noname\\.nuget\\packages\\",
-        "outputPath": "D:\\noname\\Projects\\GitHub\\Edcan3VacationProject\\server\\TinyChatServer\\TinyChatServer\\obj\\",
+        "outputPath": "D:\\noname\\Projects\\GitHub\\Edcan3VacationProject\\server\\TinyChatServer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[2.0.3, )",
               "autoReferenced": true
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
             }
           },
           "imports": [
