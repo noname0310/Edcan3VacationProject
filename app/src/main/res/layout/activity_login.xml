@@ -170,8 +170,8 @@
         <View
             app:layout_constraintVertical_bias="0.182"
             android:id="@+id/view"
-            android:layout_width="2dp"
-            android:layout_height="26dp"
+            android:layout_width="1dp"
+            android:layout_height="22dp"
             android:layout_centerInParent="true"
             android:layout_marginHorizontal="6dp"
             android:background="@color/colorPrimary1"
