@@ -86,6 +86,7 @@
                 android:drawableLeft="@drawable/ic_baseline_lock_24"
                 android:drawableTint="@color/colorPrimary1"
                 android:hint="@string/pw"
+                android:inputType="textPassword"
                 android:outlineAmbientShadowColor="@color/colorPrimary1"
                 android:padding="15dp"
                 android:text="@={pw}"

@@ -1,21 +1,29 @@
 package com.example.edcan3vacationproject;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ActionBar;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
-
-
+    Toolbar mytoolbar;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.change_name:
-                break;
             case R.id.logout:
                 break;
         }
@@ -25,13 +33,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_main);
+        mytoolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(mytoolbar);
+        mytoolbar.setTitle("");
 
-        ActionBar actionBar= getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);//기본 제목을 없애줍니다.
-        actionBar.setDisplayHomeAsUpEnabled(true);
+
 
     }
 }
