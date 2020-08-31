@@ -58,7 +58,7 @@ namespace TestClient
                 connectDone.WaitOne();
 
                 // Send test data to the remote device.  
-                Send(client, "This is a test<EOF>");
+                Send(client, "This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>This is a test<EOF>");
                 sendDone.WaitOne();
 
                 // Receive the response from the remote device.  
@@ -160,10 +160,17 @@ namespace TestClient
         private static void Send(Socket client, String data)
         {
             // Convert the string data to byte data using ASCII encoding.  
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
+            byte[] ContentBuffer = Encoding.UTF8.GetBytes(data);
+            byte[] Header = BitConverter.GetBytes(ContentBuffer.Length);
+            byte[] SendBuffer = new byte[Header.Length + ContentBuffer.Length];
+            System.Buffer.BlockCopy(Header, 0, SendBuffer, 0, Header.Length);
+            System.Buffer.BlockCopy(ContentBuffer, 0, SendBuffer, Header.Length, ContentBuffer.Length);
+
+            //if (BitConverter.IsLittleEndian)
+            //    Array.Reverse(byteData);
 
             // Begin sending the data to the remote device.  
-            client.BeginSend(byteData, 0, byteData.Length, 0,
+            client.BeginSend(SendBuffer, 0, SendBuffer.Length, 0,
                 new AsyncCallback(SendCallback), client);
         }
 
@@ -189,6 +196,7 @@ namespace TestClient
 
         public static int Main(String[] args)
         {
+            Console.WriteLine(BitConverter.IsLittleEndian);
             StartClient();
             return 0;
         }
