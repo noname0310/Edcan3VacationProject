@@ -3,6 +3,7 @@ package com.example.edcan3vacationproject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
 
 import android.app.ActionBar;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.edcan3vacationproject.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -19,12 +21,20 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Context mContext;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-Toolbar mytoolbar;
+
+    private ActivityMainBinding binding;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setTitle("");
 
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -32,6 +42,7 @@ Toolbar mytoolbar;
         menuInflater.inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
@@ -43,22 +54,10 @@ Toolbar mytoolbar;
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mytoolbar = (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(mytoolbar);
-        mytoolbar.setTitle("");
-
-
-
-
-    }
     private void logout() {
-        UserCache.clear(mContext);
+        UserCache.clear(this);
         firebaseAuth.signOut();
-        startActivity(new Intent(mContext, LoginActivity.class));
-
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 }
