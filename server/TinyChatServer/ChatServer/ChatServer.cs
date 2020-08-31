@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using TinyChatServer.Model;
 using TinyChatServer.Server;
+using TinyChatServer.Server.ClientProcess;
 
 namespace TinyChatServer.ChatServer
 {
@@ -20,11 +22,13 @@ namespace TinyChatServer.ChatServer
         public event SocketHandler OnClientDisConnect;
         public event SocketHandler OnClientDisConnected;
 
+        private Dictionary<IPEndPoint, ClientSocket> ClientAuthenticationQueue;
         private SocketServer SocketServer;
         private ChatClientManager ChatClientManager;
 
         public ChatServer()
         {
+            ClientAuthenticationQueue = new Dictionary<IPEndPoint, ClientSocket>();
             SocketServer = new SocketServer(1024);
 
             SocketServer.OnErrMessageRecived += SocketServer_OnErrMessageRecived;
@@ -40,19 +44,20 @@ namespace TinyChatServer.ChatServer
         private void SocketServer_OnMessageRecived(string msg) => OnMessageRecived?.Invoke(msg);
         private void SocketServer_OnErrMessageRecived(string msg) => OnErrMessageRecived?.Invoke(msg);
 
-        private void SocketServer_OnClientConnected(TinyChatServer.Server.ClientProcess.ClientSocket client)
+        private void SocketServer_OnClientConnected(ClientSocket client)
         {
+            //ChatClientManager.AddClient(client.IPEndPoint, );
             Console.WriteLine("SocketServer_OnClientConnected");
         }
-        private void SocketServer_OnClientDataRecived(TinyChatServer.Server.ClientProcess.ClientSocket client, string msg)
+        private void SocketServer_OnClientDataRecived(ClientSocket client, string msg)
         {
             Console.WriteLine("SocketServer_OnClientDataRecived {0}", msg);
         }
-        private void SocketServer_OnClientDisConnect(TinyChatServer.Server.ClientProcess.ClientSocket client)
+        private void SocketServer_OnClientDisConnect(ClientSocket client)
         {
             Console.WriteLine("SocketServer_OnClientDisConnect");
         }
-        private void SocketServer_OnClientDisConnected(TinyChatServer.Server.ClientProcess.ClientSocket client)
+        private void SocketServer_OnClientDisConnected(ClientSocket client)
         {
             Console.WriteLine("SocketServer_OnClientDisConnected");
         }

@@ -9,7 +9,11 @@ namespace TinyChatServer.Server.ClientProcess
             if (recivedbyte < 4)
                 return new ParseResult(false, 0, 0);
 
-            return new ParseResult(true, BitConverter.ToInt32(buffer, 0), (int)recivedbyte - sizeof(int));
+            byte[] header = new byte[4];
+            System.Buffer.BlockCopy(buffer, 0, header, 0, header.Length);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(header);
+            return new ParseResult(true, BitConverter.ToInt32(header, 0), (int)recivedbyte - sizeof(int));
         }
     }
 

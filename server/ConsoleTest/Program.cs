@@ -10,7 +10,13 @@ namespace ConsoleTest
         static void Main(string[] args)
         {
             ChatServer chatServer = new ChatServer();
+            chatServer.OnMessageRecived += ChatServer_OnMessageRecived;
+            chatServer.OnErrMessageRecived += ChatServer_OnErrMessageRecived;
             chatServer.Start();
         }
+
+        private static void ChatServer_OnErrMessageRecived(string msg) => Console.WriteLine(msg);
+
+        private static void ChatServer_OnMessageRecived(string msg) => Console.WriteLine(msg);
     }
 }

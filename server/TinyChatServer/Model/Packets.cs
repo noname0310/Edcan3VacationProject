@@ -89,7 +89,7 @@
         }
     }
 
-    struct GPSdata
+    public struct GPSdata
     {
         public float Longitude;
         public float Latitude;

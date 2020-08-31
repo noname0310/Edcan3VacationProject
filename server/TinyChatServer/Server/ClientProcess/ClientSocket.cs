@@ -120,16 +120,15 @@ namespace TinyChatServer.Server.ClientProcess
 
         public void Send(string content)
         {
-            byte[] ContentBuffer = Encoding.UTF8.GetBytes(content);
-            byte[] Header = BitConverter.GetBytes(ContentBuffer.Length);
-            byte[] SendBuffer = new byte[Header.Length + ContentBuffer.Length];
-            System.Buffer.BlockCopy(Header, 0, SendBuffer, 0, Header.Length);
-            System.Buffer.BlockCopy(ContentBuffer, 0, SendBuffer, Header.Length, ContentBuffer.Length);
+            byte[] contentBuffer = Encoding.UTF8.GetBytes(content);
+            byte[] header = BitConverter.GetBytes(contentBuffer.Length);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(header);
+            byte[] sendBuffer = new byte[header.Length + contentBuffer.Length];
+            System.Buffer.BlockCopy(header, 0, sendBuffer, 0, header.Length);
+            System.Buffer.BlockCopy(contentBuffer, 0, sendBuffer, header.Length, contentBuffer.Length);
 
-            //if (BitConverter.IsLittleEndian)
-            //    Array.Reverse(SendBuffer);
-
-            Client.BeginSend(SendBuffer, 0, SendBuffer.Length, 0, new AsyncCallback(SendCallback), Client);
+            Client.BeginSend(sendBuffer, 0, sendBuffer.Length, 0, new AsyncCallback(SendCallback), Client);
         }
 
         private void SendCallback(IAsyncResult ar)

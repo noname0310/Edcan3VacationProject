@@ -16,14 +16,16 @@ namespace TinyChatServer.ChatServer
         public string Id { get; set; }
         public string Name { get; set; }
         public GPSdata GPSdata { get; set; }
-        public Link Link { get; set; }
+        public Link Link { get; private set; }
 
-        public ChatClient(ClientSocket clientSocket, string userEmail, GPSdata gPSdata, Link link)
+        public ChatClient(ClientSocket clientSocket, string userEmail, string id, string name, GPSdata gPSdata)
         {
             ClientSocket = clientSocket;
             UserEmail = userEmail;
+
+            Id = id;
+            Name = name;
             GPSdata = gPSdata;
-            Link = link;
             Link.OnClientMessageRecived += Link_OnClientMessageRecived;
             Link.AddClient(this);
         }
@@ -35,8 +37,11 @@ namespace TinyChatServer.ChatServer
 
         public void ChangeLink(Link link)
         {
-            Link.RemoveClient(this);
-            Link.OnClientMessageRecived -= Link_OnClientMessageRecived;
+            if (Link != null)
+            {
+                Link.RemoveClient(this);
+                Link.OnClientMessageRecived -= Link_OnClientMessageRecived;
+            }
 
             Link = link;
             Link.OnClientMessageRecived += Link_OnClientMessageRecived;
@@ -64,6 +69,12 @@ namespace TinyChatServer.ChatServer
         {
             Longitude = longitude;
             Latitude = latitude;
+        }
+
+        public GPSdata(Model.GPSdata gPSdata)
+        {
+            Longitude = gPSdata.Longitude;
+            Latitude = gPSdata.Latitude;
         }
     }
 }

@@ -25,9 +25,11 @@ namespace TinyChatServer.ChatServer
             ChatClients = new List<ChatClient>();
             ReadOnlyChatClients = ChatClients;
             Links = new List<Link>();
+
+            LinkingHelper = new LinkingHelper(ChatClients, Links);
         }
 
-        public void AddClient(ClientSocket clientSocket)
+        public void AddClient(ClientSocket clientSocket, ClientConnected clientConnectedinfo)
         {
             ChatClient searched = null;
 
@@ -48,8 +50,16 @@ namespace TinyChatServer.ChatServer
                 return;
             }
 
+            ChatClient chatClient = new ChatClient(
+                clientSocket,
+                clientConnectedinfo.ChatClient.UserEmail,
+                clientConnectedinfo.ChatClient.Id,
+                clientConnectedinfo.ChatClient.Name,
+                new GPSdata(clientConnectedinfo.GPSdata)
+                );
+            LinkingHelper.LinkClient(chatClient);
 
-            ChatClients.Add();
+            ChatClients.Add(chatClient);
         }
 
         public void RemoveClient(ClientSocket clientSocket)
