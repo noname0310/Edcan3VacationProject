@@ -19,8 +19,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
 
+public class MainActivity extends AppCompatActivity {
+    private Context mContext;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
@@ -30,9 +31,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.imgSendBtn.setOnClickListener(view -> send());
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle("");
-
+        Message message = new Message();
+       //ChatClient chatClient =  new ChatClient(UserCache.getUser(m));
 
     }
 
@@ -60,4 +63,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
+    private void send(){
+
+    }
+
 }

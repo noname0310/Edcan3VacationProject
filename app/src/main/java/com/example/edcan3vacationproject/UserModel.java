@@ -6,6 +6,7 @@ public class UserModel {
     public UserModel(){}
 
     public UserModel(String id, String name, String email, String time) {
+       this.id = id;
         this.name = name;
         this.email = email;
         this.time = time;
