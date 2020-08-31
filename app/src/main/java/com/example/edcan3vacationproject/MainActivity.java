@@ -136,12 +136,7 @@ public class MainActivity extends AppCompatActivity {
         byte[] content = new byte[header.length + arr.length];
         System.arraycopy(header,0, content, 0, header.length );
         System.arraycopy(arr,0, content, header.length, arr.length );
-        OutputStream out = new OutputStream() {
-            @Override
-            public void write() throws IOException {
 
-            }
-        }
 
 
     }
