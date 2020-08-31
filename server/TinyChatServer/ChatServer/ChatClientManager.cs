@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Net;
 using TinyChatServer.Model;
 using TinyChatServer.Server.ClientProcess;
 using TinyChatServer.ChatServer.ChatLinker;
@@ -10,34 +11,37 @@ namespace TinyChatServer.ChatServer
     class ChatClientManager
     {
         public delegate void MessageHandler(string msg);
-        public event MessageHandler OnMessageRecived;
+        //public event MessageHandler OnMessageRecived;
         public event MessageHandler OnErrMessageRecived;
 
-        public IReadOnlyList<ChatClient> ReadOnlyChatClients;
+        public IReadOnlyDictionary<IPAddress, ChatClient> ReadOnlyChatClients;
 
-        private List<ChatClient> ChatClients;
-        private List<Link> Links;
+        private Dictionary<IPAddress, ChatClient> ChatClients;
 
         private LinkingHelper LinkingHelper;
 
         public ChatClientManager()
         {
-            ChatClients = new List<ChatClient>();
+            ChatClients = new Dictionary<IPAddress, ChatClient>();
             ReadOnlyChatClients = ChatClients;
-            Links = new List<Link>();
 
-            LinkingHelper = new LinkingHelper(ChatClients, Links);
+            LinkingHelper = new LinkingHelper(ChatClients);
         }
 
-        public void AddClient(ClientSocket clientSocket, ClientConnected clientConnectedinfo)
+        public void Dispose()
+        {
+            ChatClients.Clear();
+        }
+
+        public ChatClient AddClient(ClientSocket clientSocket, ClientConnected clientConnectedinfo)
         {
             ChatClient searched = null;
 
             foreach (var item in ChatClients)
             {
-                if (item.ClientSocket == clientSocket)
+                if (item.Value.ClientSocket == clientSocket)
                 {
-                    searched = item;
+                    searched = item.Value;
                     break;
                 }
             }
@@ -45,9 +49,9 @@ namespace TinyChatServer.ChatServer
             if (searched != null)
             {
                 OnErrMessageRecived?.Invoke(
-                       string.Format("ClientSocket {0} is already exist while trying AddClient", clientSocket.IPEndPoint.Address.ToString())
+                       string.Format("ClientSocket {0} is already exist while trying AddClient", clientSocket.IPAddress.ToString())
                        );
-                return;
+                return searched;
             }
 
             ChatClient chatClient = new ChatClient(
@@ -59,7 +63,8 @@ namespace TinyChatServer.ChatServer
                 );
             LinkingHelper.LinkClient(chatClient);
 
-            ChatClients.Add(chatClient);
+            ChatClients.Add(clientSocket.IPAddress, chatClient);
+            return chatClient;
         }
 
         public void RemoveClient(ClientSocket clientSocket)
@@ -68,9 +73,9 @@ namespace TinyChatServer.ChatServer
 
             foreach (var item in ChatClients)
             {
-                if (item.ClientSocket == clientSocket)
+                if (item.Value.ClientSocket == clientSocket)
                 {
-                    searched = item;
+                    searched = item.Value;
                     break;
                 }
             }
@@ -78,27 +83,13 @@ namespace TinyChatServer.ChatServer
             if (searched == null)
             {
                 OnErrMessageRecived?.Invoke(
-                    string.Format("ClientSocket {0} is not exist while trying RemoveClient", clientSocket.IPEndPoint.Address.ToString())
+                    string.Format("ClientSocket {0} is not exist while trying RemoveClient", clientSocket.IPAddress.ToString())
                     );
                 return;
             }
 
             searched.SendData(new ClientDisConnect());
-            ChatClients.Remove(searched);
-        }
-
-        public void UpdateLinks()
-        {
-            if (ChatClients.Count <= 1)
-            {
-                Links.Clear();
-            }
-
-            List<Link> LinksCopy = new List<Link>(Links);
-            foreach (var item in LinksCopy)
-            {
-
-            }
+            ChatClients.Remove(searched.ClientSocket.IPAddress);
         }
     }
 }

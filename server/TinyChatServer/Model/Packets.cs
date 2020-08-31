@@ -91,10 +91,10 @@
 
     public struct GPSdata
     {
-        public float Longitude;
-        public float Latitude;
+        public double Longitude;
+        public double Latitude;
 
-        public GPSdata(float longitude, float latitude)
+        public GPSdata(double longitude, double latitude)
         {
             Longitude = longitude;
             Latitude = latitude;

@@ -16,7 +16,8 @@ namespace TinyChatServer.ChatServer
         public string Id { get; set; }
         public string Name { get; set; }
         public GPSdata GPSdata { get; set; }
-        public Link Link { get; private set; }
+
+        public List<ChatClient> LinkedClients;
 
         public ChatClient(ClientSocket clientSocket, string userEmail, string id, string name, GPSdata gPSdata)
         {
@@ -26,32 +27,26 @@ namespace TinyChatServer.ChatServer
             Id = id;
             Name = name;
             GPSdata = gPSdata;
-            Link.OnClientMessageRecived += Link_OnClientMessageRecived;
-            Link.AddClient(this);
+            LinkedClients = new List<ChatClient>();
         }
 
-        private void Link_OnClientMessageRecived(ChatClient chatClient, Message msg)
+        public void OnClientMessageRecived(Message message)
         {
-            SendData(msg);
-        }
+            if (UserEmail == message.ChatClient.UserEmail)
+                return;
 
-        public void ChangeLink(Link link)
-        {
-            if (Link != null)
+            SendData(message);
+
+            foreach (var item in LinkedClients)
             {
-                Link.RemoveClient(this);
-                Link.OnClientMessageRecived -= Link_OnClientMessageRecived;
+                item.OnClientMessageRecived(message);
             }
-
-            Link = link;
-            Link.OnClientMessageRecived += Link_OnClientMessageRecived;
-            Link.AddClient(this);
         }
 
         public void SendData(Packet packet)
         {
             JObject jObject = JObject.FromObject(packet);
-            ClientSocket.Send(jObject.ToString());
+            ClientSocket.AsyncSend(jObject.ToString());
         }
 
         public void UpdateGPS(GPSdata gPSdata)
@@ -62,10 +57,10 @@ namespace TinyChatServer.ChatServer
 
     public struct GPSdata
     {
-        public float Longitude;
-        public float Latitude;
+        public double Longitude;
+        public double Latitude;
 
-        public GPSdata(float longitude, float latitude)
+        public GPSdata(double longitude, double latitude)
         {
             Longitude = longitude;
             Latitude = latitude;

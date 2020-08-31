@@ -8,11 +8,11 @@ namespace TinyChatServer.Server
     class SocketListener
     {
         public delegate void MessageHandler(string msg);
-        public event MessageHandler OnMessageRecived;
-        public event MessageHandler OnErrMessageRecived;
+        public event MessageHandler AsyncOnMessageRecived;
+        public event MessageHandler AsyncOnErrMessageRecived;
 
         public delegate void ClientConnected(Socket ClientSocket);
-        public event ClientConnected OnClientConnected;
+        public event ClientConnected AsyncOnClientConnected;
 
         public Socket Listener { get; private set; }
 
@@ -29,41 +29,44 @@ namespace TinyChatServer.Server
         {
             if (Listening)
             {
-                OnErrMessageRecived?.Invoke("Listener is already running!");
+                AsyncOnErrMessageRecived?.Invoke("Listener is already running!");
                 return;
             }
 
-            Listener = new Socket(localEndPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
-            try
+            new Thread(() =>
             {
-                Listener.Bind(localEndPoint);
-                Listener.Listen(100);
+                Listener = new Socket(localEndPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-                Listening = true;
-                while (Listening)
+                try
                 {
-                    ManualResetEvent.Reset();
-                    OnMessageRecived?.Invoke("Waiting for a connection...");
-                    Listener.BeginAccept(new AsyncCallback(AcceptCallback), Listener);
-                    ManualResetEvent.WaitOne();
-                }
+                    Listener.Bind(localEndPoint);
+                    Listener.Listen(100);
 
-            }
-            catch (SocketException e)
-            {
-                OnErrMessageRecived?.Invoke(e.ToString());
-                OnMessageRecived?.Invoke("Try listen again...");
-                Stop();
-                Start(localEndPoint);
-            }
+                    Listening = true;
+                    while (Listening)
+                    {
+                        ManualResetEvent.Reset();
+                        AsyncOnMessageRecived?.Invoke("Waiting for a connection...");
+                        Listener.BeginAccept(new AsyncCallback(AcceptCallback), Listener);
+                        ManualResetEvent.WaitOne();
+                    }
+
+                }
+                catch (SocketException e)
+                {
+                    AsyncOnErrMessageRecived?.Invoke(e.ToString());
+                    AsyncOnMessageRecived?.Invoke("Try listen again...");
+                    Stop();
+                    Start(localEndPoint);
+                }
+            }).Start();
         }
 
         public void Stop()
         {
             if (!Listening)
             {
-                OnErrMessageRecived?.Invoke("Listener is not running!");
+                AsyncOnErrMessageRecived?.Invoke("Listener is not running!");
                 return;
             }
 
@@ -76,7 +79,7 @@ namespace TinyChatServer.Server
         {
             ManualResetEvent.Set();
             Socket clientSocket = Listener.EndAccept(ar);
-            OnClientConnected?.Invoke(clientSocket);
+            AsyncOnClientConnected?.Invoke(clientSocket);
         }
     }
 }

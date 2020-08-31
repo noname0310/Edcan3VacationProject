@@ -9,17 +9,17 @@ namespace TinyChatServer.Server.ClientProcess
     public class ClientSocket : IEquatable<ClientSocket>
     {
         public delegate void MessageHandler(string msg);
-        public event MessageHandler OnMessageRecived;
-        public event MessageHandler OnErrMessageRecived;
+        public event MessageHandler AsyncOnMessageRecived;
+        public event MessageHandler AsyncOnErrMessageRecived;
 
         public delegate void SocketHandler(ClientSocket client);
-        public event SocketHandler OnClientDisConnect;
-        public event SocketHandler OnClientDisConnected;
+        public event SocketHandler AsyncOnClientDisConnect;
+        public event SocketHandler AsyncOnClientDisConnected;
 
         public delegate void ClientDataRecived(ClientSocket clientSocket, byte[] receivedData, ParseResult parseResult);
-        public event ClientDataRecived OnClientDataRecived;
+        public event ClientDataRecived AsyncOnClientDataRecived;
 
-        public readonly IPEndPoint IPEndPoint;
+        public readonly IPAddress IPAddress;
 
         private readonly uint PacketSize;
         private byte[] Buffer;
@@ -36,7 +36,7 @@ namespace TinyChatServer.Server.ClientProcess
         {
             PacketSize = packetSize;
             Client = client;
-            IPEndPoint = Client.RemoteEndPoint as IPEndPoint;
+            IPAddress = (Client.RemoteEndPoint as IPEndPoint).Address;
             HeaderParsed = false;
         }
 
@@ -75,7 +75,7 @@ namespace TinyChatServer.Server.ClientProcess
 
                         HeaderParsed = false;
                         Process(Buffer.Length);
-                        OnClientDataRecived?.Invoke(this, bufferClone, parseResult);
+                        AsyncOnClientDataRecived?.Invoke(this, bufferClone, parseResult);
                     }
                     else
                     {
@@ -104,7 +104,7 @@ namespace TinyChatServer.Server.ClientProcess
                         HeaderParsed = false;
                         Process(Buffer.Length);
 
-                        OnClientDataRecived?.Invoke(this, bufferClone, parseResult);
+                        AsyncOnClientDataRecived?.Invoke(this, bufferClone, parseResult);
                     }
                     else
                         Process(LeftContentByte);
@@ -112,13 +112,13 @@ namespace TinyChatServer.Server.ClientProcess
             }
             catch(SocketException e)
             {
-                OnErrMessageRecived?.Invoke(e.Message);
-                OnMessageRecived?.Invoke("Error Handled, Client force disconnected");
+                AsyncOnErrMessageRecived?.Invoke(e.Message);
+                AsyncOnMessageRecived?.Invoke("Error Handled, Client force disconnected");
                 Dispose();
             }
         }
 
-        public void Send(string content)
+        public void AsyncSend(string content)
         {
             byte[] contentBuffer = Encoding.UTF8.GetBytes(content);
             byte[] header = BitConverter.GetBytes(contentBuffer.Length);
@@ -136,26 +136,26 @@ namespace TinyChatServer.Server.ClientProcess
             try
             {
                 int bytesSent = Client.EndSend(ar);
-                OnMessageRecived?.Invoke(string.Format("Sent {0} bytes to client.", bytesSent));
+                AsyncOnMessageRecived?.Invoke(string.Format("Sent {0} bytes to client.", bytesSent));
             }
             catch (Exception e)
             {
-                OnErrMessageRecived?.Invoke(e.ToString());
+                AsyncOnErrMessageRecived?.Invoke(e.ToString());
             }
         }
 
         public void Dispose()
         {
-            OnClientDisConnect.Invoke(this);
+            AsyncOnClientDisConnect.Invoke(this);
             Client.Shutdown(SocketShutdown.Both);
             Client.Close();
             Client.Dispose();
-            OnClientDisConnected.Invoke(this);
+            AsyncOnClientDisConnected.Invoke(this);
         }
 
         public bool Equals(ClientSocket other)
         {
-            return EqualityComparer<IPEndPoint>.Default.Equals(IPEndPoint, other.IPEndPoint) &&
+            return EqualityComparer<IPAddress>.Default.Equals(IPAddress, other.IPAddress) &&
                    EqualityComparer<Socket>.Default.Equals(Client, other.Client);
         }
 
@@ -168,7 +168,7 @@ namespace TinyChatServer.Server.ClientProcess
         public override int GetHashCode()
         {
             int hashCode = 936257235;
-            hashCode = hashCode * -1521134295 + EqualityComparer<IPEndPoint>.Default.GetHashCode(IPEndPoint);
+            hashCode = hashCode * -1521134295 + EqualityComparer<IPAddress>.Default.GetHashCode(IPAddress);
             hashCode = hashCode * -1521134295 + EqualityComparer<Socket>.Default.GetHashCode(Client);
             return hashCode;
         }

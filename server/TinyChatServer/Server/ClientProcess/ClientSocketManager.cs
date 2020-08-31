@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -8,62 +9,72 @@ namespace TinyChatServer.Server.ClientProcess
     class ClientSocketManager
     {
         public delegate void MessageHandler(string msg);
-        public event MessageHandler OnMessageRecived;
-        public event MessageHandler OnErrMessageRecived;
+        public event MessageHandler AsyncOnMessageRecived;
+        public event MessageHandler AsyncOnErrMessageRecived;
 
         public delegate void SocketHandler(ClientSocket client);
-        public event SocketHandler OnClientDisConnect;
-        public event SocketHandler OnClientDisConnected;
+        public event SocketHandler AsyncOnClientDisConnect;
+        public event SocketHandler AsyncOnClientDisConnected;
 
         public delegate void ClientDataHandler(ClientSocket client, string content);
-        public event ClientDataHandler OnClientDataRecived;
+        public event ClientDataHandler AsyncOnClientDataRecived;
+
+        public IReadOnlyDictionary<IPAddress, ClientSocket> ReadOnlyClientSockets;
 
         private readonly uint PacketSize;
-        private List<ClientSocket> ClientSockets;
+        private Dictionary<IPAddress, ClientSocket> ClientSockets;
+        private object ClientSocketManagerLickObject;
 
         public ClientSocketManager(uint packetsize)
         {
             PacketSize = packetsize;
-            ClientSockets = new List<ClientSocket>();
+            ClientSockets = new Dictionary<IPAddress, ClientSocket>();
+            ReadOnlyClientSockets = ClientSockets;
+            ClientSocketManagerLickObject = new object();
         }
 
         public void Dispose()
         {
-            List<ClientSocket> clonelist = new List<ClientSocket>(ClientSockets);
+            Dictionary<IPAddress, ClientSocket> clonelist = new Dictionary<IPAddress, ClientSocket>(ClientSockets);
             foreach (var item in clonelist)
             {
-                item.Dispose();
+                item.Value.Dispose();
             }
         }
 
         public ClientSocket ClientProcess(Socket Client)
         {
             ClientSocket clientSocket = new ClientSocket(PacketSize, Client);
-            ClientSockets.Add(clientSocket);
-            clientSocket.OnMessageRecived += ClientSocket_OnMessageRecived;
-            clientSocket.OnErrMessageRecived += ClientSocket_OnErrMessageRecived;
-            clientSocket.OnClientDisConnect += ClientSocket_OnClientDisConnect;
-            clientSocket.OnClientDisConnected += ClientSocket_OnClientDisConnected;
-            clientSocket.OnClientDataRecived += ClientSocket_OnClientDataRecived;
+
+            lock (ClientSocketManagerLickObject)
+                ClientSockets.Add((Client.RemoteEndPoint as IPEndPoint).Address, clientSocket);
+
+            clientSocket.AsyncOnMessageRecived += ClientSocket_AsyncOnMessageRecived;
+            clientSocket.AsyncOnErrMessageRecived += ClientSocket_AsyncOnErrMessageRecived;
+            clientSocket.AsyncOnClientDisConnect += ClientSocket_AsyncOnClientDisConnect;
+            clientSocket.AsyncOnClientDisConnected += ClientSocket_AsyncOnClientDisConnected;
+            clientSocket.AsyncOnClientDataRecived += ClientSocket_AsyncOnClientDataRecived;
             clientSocket.StartProcess();
             return clientSocket;
         }
 
-        private void ClientSocket_OnErrMessageRecived(string msg) => OnErrMessageRecived?.Invoke(msg);
-        private void ClientSocket_OnMessageRecived(string msg) => OnMessageRecived?.Invoke(msg);
-        private void ClientSocket_OnClientDisConnect(ClientSocket client) => OnClientDisConnect?.Invoke(client);
-        private void ClientSocket_OnClientDisConnected(ClientSocket client)
+        private void ClientSocket_AsyncOnErrMessageRecived(string msg) => AsyncOnErrMessageRecived?.Invoke(msg);
+        private void ClientSocket_AsyncOnMessageRecived(string msg) => AsyncOnMessageRecived?.Invoke(msg);
+        private void ClientSocket_AsyncOnClientDisConnect(ClientSocket client) => AsyncOnClientDisConnect?.Invoke(client);
+        private void ClientSocket_AsyncOnClientDisConnected(ClientSocket client)
         {
-            client.OnMessageRecived -= ClientSocket_OnMessageRecived;
-            client.OnErrMessageRecived -= ClientSocket_OnErrMessageRecived;
-            client.OnClientDisConnect -= ClientSocket_OnClientDisConnect;
-            client.OnClientDisConnected -= ClientSocket_OnClientDisConnected;
-            client.OnClientDataRecived -= ClientSocket_OnClientDataRecived;
-            OnClientDisConnected?.Invoke(client);
-            ClientSockets.Remove(client);
+            client.AsyncOnMessageRecived -= ClientSocket_AsyncOnMessageRecived;
+            client.AsyncOnErrMessageRecived -= ClientSocket_AsyncOnErrMessageRecived;
+            client.AsyncOnClientDisConnect -= ClientSocket_AsyncOnClientDisConnect;
+            client.AsyncOnClientDisConnected -= ClientSocket_AsyncOnClientDisConnected;
+            client.AsyncOnClientDataRecived -= ClientSocket_AsyncOnClientDataRecived;
+            AsyncOnClientDisConnected?.Invoke(client);
+
+            lock (ClientSocketManagerLickObject)
+                ClientSockets.Remove(client.IPAddress);
         }
 
-        private void ClientSocket_OnClientDataRecived(ClientSocket clientSocket, byte[] ReceivedData, ParseResult parseResult)
+        private void ClientSocket_AsyncOnClientDataRecived(ClientSocket clientSocket, byte[] ReceivedData, ParseResult parseResult)
         {
             string content;
 
@@ -76,7 +87,7 @@ namespace TinyChatServer.Server.ClientProcess
                 content = Encoding.UTF8.GetString(contentByte);
             }
 
-            OnClientDataRecived?.Invoke(clientSocket, content);
+            AsyncOnClientDataRecived?.Invoke(clientSocket, content);
         }
     }
 }
