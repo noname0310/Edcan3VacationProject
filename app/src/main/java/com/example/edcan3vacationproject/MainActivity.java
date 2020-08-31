@@ -9,14 +9,21 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.edcan3vacationproject.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Objects;
 
 
@@ -26,12 +33,49 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     private ActivityMainBinding binding;
+    private String html = "";
+    private Handler mHandler;
+
+    private Socket socket;
+
+    private BufferedReader networkReader;
+    private BufferedWriter networkWriter;
+
+    private String ip = " 127.0.0.1";
+    private int port = 20310;
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHandler = new Handler();
+
+
+
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.imgSendBtn.setOnClickListener(view -> send());
+        binding.imgSendBtn.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                if (binding.editText3.getText().toString() != null || !binding.editText3.getText().toString().equals("")) {
+                    PrintWriter out = new PrintWriter(networkWriter, true);
+                    String return_msg = binding.editText3.getText().toString();
+                    out.println(return_msg);
+                }
+            }
+        });
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle("");
         Message message = new Message();
@@ -63,8 +107,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
-    private void send(){
 
-    }
 
 }
