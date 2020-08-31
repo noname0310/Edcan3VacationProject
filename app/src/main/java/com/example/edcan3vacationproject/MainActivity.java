@@ -5,15 +5,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.ActionBar;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    Toolbar mytoolbar;
+
+    private Context mContext;
+    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+Toolbar mytoolbar;
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -25,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         switch(item.getItemId()){
             case R.id.change_name:
             case R.id.logout:
+                logout();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -39,6 +52,13 @@ public class MainActivity extends AppCompatActivity {
         mytoolbar.setTitle("");
 
 
+
+
+    }
+    private void logout() {
+        UserCache.clear(mContext);
+        firebaseAuth.signOut();
+        startActivity(new Intent(mContext, LoginActivity.class));
 
     }
 }
