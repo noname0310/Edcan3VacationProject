@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "3XGjR7OnV9EJMWwh+/nvywrm+cwPBc5jOhuqTllg2qocdKEBBLTvO2uDXvmO6E7U3R5CE7NFY2H4mEO1QfQbiw==",
+  "success": true,
+  "projectFilePath": "D:\\noname\\Projects\\GitHub\\Edcan3VacationProject\\server\\ConsoleTest\\ConsoleTest.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\noname\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

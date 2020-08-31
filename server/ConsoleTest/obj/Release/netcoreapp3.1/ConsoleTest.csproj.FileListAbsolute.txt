@@ -1,0 +1,17 @@
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\bin\Release\netcoreapp3.1\ConsoleTest.exe
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\bin\Release\netcoreapp3.1\ConsoleTest.deps.json
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\bin\Release\netcoreapp3.1\ConsoleTest.runtimeconfig.json
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\bin\Release\netcoreapp3.1\ConsoleTest.runtimeconfig.dev.json
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\bin\Release\netcoreapp3.1\ConsoleTest.dll
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\bin\Release\netcoreapp3.1\ConsoleTest.pdb
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\bin\Release\netcoreapp3.1\Newtonsoft.Json.dll
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\bin\Release\netcoreapp3.1\TinyChatServer.dll
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\bin\Release\netcoreapp3.1\TinyChatServer.pdb
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\obj\Release\netcoreapp3.1\ConsoleTest.csprojAssemblyReference.cache
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\obj\Release\netcoreapp3.1\ConsoleTest.AssemblyInfoInputs.cache
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\obj\Release\netcoreapp3.1\ConsoleTest.AssemblyInfo.cs
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\obj\Release\netcoreapp3.1\ConsoleTest.csproj.CoreCompileInputs.cache
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\obj\Release\netcoreapp3.1\ConsoleTest.csproj.CopyComplete
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\obj\Release\netcoreapp3.1\ConsoleTest.dll
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\obj\Release\netcoreapp3.1\ConsoleTest.pdb
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\ConsoleTest\obj\Release\netcoreapp3.1\ConsoleTest.genruntimeconfig.cache

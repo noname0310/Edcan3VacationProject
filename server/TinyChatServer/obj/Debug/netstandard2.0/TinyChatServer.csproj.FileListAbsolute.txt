@@ -1,0 +1,9 @@
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\TinyChatServer\bin\Debug\netstandard2.0\TinyChatServer.deps.json
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\TinyChatServer\bin\Debug\netstandard2.0\TinyChatServer.dll
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\TinyChatServer\bin\Debug\netstandard2.0\TinyChatServer.pdb
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\TinyChatServer\obj\Debug\netstandard2.0\TinyChatServer.csprojAssemblyReference.cache
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\TinyChatServer\obj\Debug\netstandard2.0\TinyChatServer.AssemblyInfoInputs.cache
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\TinyChatServer\obj\Debug\netstandard2.0\TinyChatServer.AssemblyInfo.cs
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\TinyChatServer\obj\Debug\netstandard2.0\TinyChatServer.dll
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\TinyChatServer\obj\Debug\netstandard2.0\TinyChatServer.pdb
+D:\noname\Projects\GitHub\Edcan3VacationProject\server\TinyChatServer\obj\Debug\netstandard2.0\TinyChatServer.csproj.CoreCompileInputs.cache

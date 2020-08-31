@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "iAtur4ivq9IU2OjH0dI1iU2rO6GKPzbnA9XI6n6woKE/i1I0sLA8BrQVVm9lVUreK7IthPysSd1/cpqttKnNXA==",
+  "success": true,
+  "projectFilePath": "D:\\noname\\Projects\\GitHub\\Edcan3VacationProject\\server\\TinyChatServer\\TinyChatServer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\noname\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\noname\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
+    "C:\\Users\\noname\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
