@@ -121,12 +121,14 @@ namespace TinyChatServer.ChatServer
         public void Start()
         {
             SocketServer.Start(20310);
+            OnMessageRecived?.Invoke("Server started");
         }
 
         public void Stop()
         {
             SocketServer.Stop();
             ChatClientManager.Dispose();
+            OnMessageRecived?.Invoke("Server stopped");
         }
         public void RunSyncRoutine()
         {
