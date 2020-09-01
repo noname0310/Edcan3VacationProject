@@ -44,18 +44,14 @@ namespace TestClient
                 // Establish the remote endpoint for the socket.  
                 // The name of the
                 // remote device is "host.contoso.com".  
-                IPHostEntry ipHostInfo = Dns.GetHostEntry("127.0.0.1");
-                IPAddress ipAddress = ipHostInfo.AddressList[0];
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
+                
+                IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
 
                 // Create a TCP/IP socket.  
-                Socket client = new Socket(ipAddress.AddressFamily,
-                    SocketType.Stream, ProtocolType.Tcp);
+                Socket client = new Socket(remoteEP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 // Connect to the remote endpoint.  
-                client.BeginConnect(remoteEP,
-                    new AsyncCallback(ConnectCallback), client);
-                connectDone.WaitOne();
+                client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client); connectDone.WaitOne();
 
                 // Send test data to the remote device.  
                 Send(client, @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at odio laoreet, aliquet neque et, posuere neque. Cras convallis turpis quis mi posuere, quis efficitur augue commodo. Aenean molestie non nulla vitae suscipit. Donec suscipit in lacus nec sollicitudin. Praesent id fringilla lacus. Etiam convallis orci ipsum, sit amet gravida lorem vestibulum ut. Duis in ipsum ornare felis pharetra auctor vel sed orci. Vivamus ullamcorper urna a posuere tempor. Etiam ipsum lorem, faucibus eget nisl non, egestas eleifend diam. Vivamus hendrerit, lacus sed aliquam faucibus, quam est sodales velit, ut vehicula massa massa a massa. Mauris quis tellus sollicitudin, ornare dolor malesuada, faucibus leo. Vestibulum ultricies erat et sem iaculis cursus. Pellentesque neque tellus, ultricies eu purus in, convallis tristique enim.
@@ -385,7 +381,7 @@ Sed non sem tellus. Aenean sit amet maximus nisi. Nullam aliquet aliquet congue.
                 Socket client = (Socket)ar.AsyncState;
 
                 // Complete the connection.  
-                client.EndConnect(ar);
+                //client.EndConnect(ar);
 
                 Console.WriteLine("Socket connected to {0}",
                     client.RemoteEndPoint.ToString());
