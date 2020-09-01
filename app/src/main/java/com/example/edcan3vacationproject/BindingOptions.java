@@ -22,5 +22,10 @@ public class BindingOptions {
     public static void bindOverflowIcon(Toolbar toolbar, Drawable drawable){
         toolbar.setOverflowIcon(drawable);
     }
+    @BindingAdapter("memoItem")
+    public static void bindMemoItem(RecyclerView recyclerView, ObservableArrayList<Message> items) {
+        ChatAdapter adapter = (ChatAdapter)recyclerVi   ew.getAdapter();
+        if(adapter!=null) adapter.setItem(items);
+    }
 
 }
