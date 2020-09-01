@@ -30,6 +30,10 @@ namespace TinyChatServer.ChatServer
 
         public void Dispose()
         {
+            foreach (var item in ChatClients)
+            {
+                item.Value.OnGPSUpdated -= ChatClient_OnGPSUpdated;
+            }
             ChatClients.Clear();
         }
 
@@ -62,10 +66,13 @@ namespace TinyChatServer.ChatServer
                 new GPSdata(clientConnectedinfo.GPSdata)
                 );
             LinkingHelper.LinkClient(chatClient);
+            chatClient.OnGPSUpdated += ChatClient_OnGPSUpdated;
 
             ChatClients.Add(clientSocket.IPAddress, chatClient);
             return chatClient;
         }
+
+        private void ChatClient_OnGPSUpdated(ChatClient chatClient) => LinkingHelper.UpdateLink(chatClient);
 
         public void RemoveClient(ClientSocket clientSocket)
         {
@@ -90,6 +97,7 @@ namespace TinyChatServer.ChatServer
 
             searched.SendData(new ClientDisConnect());
             ChatClients.Remove(searched.ClientSocket.IPAddress);
+            searched.OnGPSUpdated -= ChatClient_OnGPSUpdated;
         }
     }
 }

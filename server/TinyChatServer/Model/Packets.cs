@@ -1,4 +1,7 @@
-﻿namespace TinyChatServer.Model
+﻿using System;
+using System.Collections.Generic;
+
+namespace TinyChatServer.Model
 {
     public enum PacketType
     {
@@ -13,7 +16,7 @@
         public PacketType PacketType;
     }
 
-    public class Message : Packet
+    public class Message : Packet, IEquatable<Message>
     {
         public ChatClient ChatClient;
         public string Msg;
@@ -27,6 +30,36 @@
         {
             ChatClient = chatClient;
             Msg = msg;
+        }
+
+        public bool Equals(Message other)
+        {
+            return EqualityComparer<ChatClient>.Default.Equals(ChatClient, other.ChatClient) &&
+                   Msg == other.Msg;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Message message &&
+                   Equals(message);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -943457266;
+            hashCode = hashCode * -1521134295 + EqualityComparer<ChatClient>.Default.GetHashCode(ChatClient);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Msg);
+            return hashCode;
+        }
+
+        public static bool operator ==(Message left, Message right)
+        {
+            return EqualityComparer<Message>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(Message left, Message right)
+        {
+            return !(left == right);
         }
     }
 

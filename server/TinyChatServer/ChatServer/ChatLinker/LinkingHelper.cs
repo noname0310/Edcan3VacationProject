@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
-using TinyChatServer.Model;
-using TinyChatServer.Server.ClientProcess;
 
 namespace TinyChatServer.ChatServer.ChatLinker
 {
@@ -15,18 +12,65 @@ namespace TinyChatServer.ChatServer.ChatLinker
         {
             ChatClients = chatClients;
         }
+        
+        public void InitLinks()
+        {
+            foreach (var item in ChatClients)
+            {
+                item.Value.LinkedClients.Clear();
+                foreach (var other in ChatClients)
+                {
+                    if (item.Value == other.Value)
+                        continue;
+
+                    double distance = GPSDistanceMeter(item.Value.GPSdata, other.Value.GPSdata);
+
+                    if (distance <= 10)
+                        item.Value.LinkedClients.Add(other.Value);
+                }
+            }
+        }
 
         public void LinkClient(ChatClient chatClient)
         {
-            //chatClient.ChangeLink();
+            chatClient.LinkedClients.Clear();
+
+            foreach (var other in ChatClients)
+            {
+                if (chatClient == other.Value)
+                    continue;
+
+                double distance = GPSDistanceMeter(chatClient.GPSdata, other.Value.GPSdata);
+
+                if (distance <= 10)
+                {
+                    chatClient.LinkedClients.Add(other.Value);
+                    other.Value.LinkedClients.Add(chatClient);
+                }
+            }
         }
 
-        public void InitLinks()
+        public void UpdateLink(ChatClient chatClient)
         {
-        }
+            foreach (var item in chatClient.LinkedClients)
+            {
+                item.LinkedClients.Remove(chatClient);
+            }
+            chatClient.LinkedClients.Clear();
 
-        public void UpdateLinks()
-        {
+            foreach (var other in ChatClients)
+            {
+                if (chatClient == other.Value)
+                    continue;
+
+                double distance = GPSDistanceMeter(chatClient.GPSdata, other.Value.GPSdata);
+
+                if (distance <= 10)
+                {
+                    chatClient.LinkedClients.Add(other.Value);
+                    other.Value.LinkedClients.Add(chatClient);
+                }
+            }
         }
 
         public double GPSDistanceMeter(GPSdata some, GPSdata other)
@@ -36,12 +80,12 @@ namespace TinyChatServer.ChatServer.ChatLinker
             theta = some.Longitude - other.Longitude;
             distance =
                 (
-                Math.Sin(ConvertDegreesToRadians(some.Latitude)) * 
+                Math.Sin(ConvertDegreesToRadians(some.Latitude)) *
                 Math.Sin(ConvertDegreesToRadians(other.Latitude))
-                ) 
-                + 
+                )
+                +
                 (
-                Math.Cos(ConvertDegreesToRadians(some.Latitude)) * 
+                Math.Cos(ConvertDegreesToRadians(some.Latitude)) *
                 Math.Cos(ConvertDegreesToRadians(other.Latitude)) *
                 Math.Cos(ConvertDegreesToRadians(theta))
                 );

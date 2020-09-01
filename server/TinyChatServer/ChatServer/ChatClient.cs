@@ -1,23 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using TinyChatServer.Model;
 using TinyChatServer.Server.ClientProcess;
-using TinyChatServer.ChatServer.ChatLinker;
 using Newtonsoft.Json.Linq;
 
 namespace TinyChatServer.ChatServer
 {
     public class ChatClient
     {
+        public delegate void GPSUpdateHandler(ChatClient chatClient);
+        public event GPSUpdateHandler OnGPSUpdated;
+        
         public readonly ClientSocket ClientSocket;
         public readonly string UserEmail;
 
         public string Id { get; set; }
         public string Name { get; set; }
-        public GPSdata GPSdata { get; set; }
+        public GPSdata GPSdata {
+            get 
+            {
+                return gPSdata;
+            } 
+            set 
+            {
+                gPSdata = value;
+                OnGPSUpdated?.Invoke(this);
+            } 
+        }
+        public GPSdata gPSdata;
+        public List<ChatClient> LinkedClients { get; private set; }
 
-        public List<ChatClient> LinkedClients;
+        private Message PrevMessage;
 
         public ChatClient(ClientSocket clientSocket, string userEmail, string id, string name, GPSdata gPSdata)
         {
@@ -35,6 +47,11 @@ namespace TinyChatServer.ChatServer
             if (UserEmail == message.ChatClient.UserEmail)
                 return;
 
+            if (PrevMessage == message)
+                return;
+
+            PrevMessage = message;
+
             SendData(message);
 
             foreach (var item in LinkedClients)
@@ -47,11 +64,6 @@ namespace TinyChatServer.ChatServer
         {
             JObject jObject = JObject.FromObject(packet);
             ClientSocket.AsyncSend(jObject.ToString());
-        }
-
-        public void UpdateGPS(GPSdata gPSdata)
-        {
-            GPSdata = gPSdata;
         }
     }
 

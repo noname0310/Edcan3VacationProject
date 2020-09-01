@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using TinyChatServer.Model;
 using TinyChatServer.Server;
 using TinyChatServer.Server.ClientProcess;
@@ -33,7 +31,7 @@ namespace TinyChatServer.ChatServer
         public ChatServer()
         {
             ClientAuthenticationQueue = new Dictionary<IPAddress, ClientSocket>();
-            SocketServer = new SocketServer(1024);
+            SocketServer = new SocketServer(512);
 
             SocketServer.OnErrMessageRecived += SocketServer_OnErrMessageRecived;
             SocketServer.OnMessageRecived += SocketServer_OnMessageRecived;
