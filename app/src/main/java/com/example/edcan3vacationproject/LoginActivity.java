@@ -39,16 +39,16 @@ public class LoginActivity extends AppCompatActivity {
         }
         firebaseFirestore
                 .collection("users")
-                .document(email)
-                .get()
-                .addOnSuccessListener(document -> {
-                    firebaseAuth
-                            .signInWithEmailAndPassword(email, pw)
-                            .addOnSuccessListener(runnable1 -> {
-                                UserCache.setUser(this, document.toObject(UserModel.class));
-                                startActivity(new Intent( LoginActivity.this, MainActivity.class));
-                                finish();
-                            })
+                            .document(email)
+                            .get()
+                            .addOnSuccessListener(document -> {
+                                firebaseAuth
+                                        .signInWithEmailAndPassword(email, pw)
+                                        .addOnSuccessListener(runnable1 -> {
+                                            UserCache.setUser(this, document.toObject(UserModel.class));
+                                            startActivity(new Intent( LoginActivity.this, MainActivity.class));
+                                            finish();
+                                        })
                             .addOnFailureListener(e ->
                                     Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show());
                 })

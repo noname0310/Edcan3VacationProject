@@ -62,58 +62,58 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         GpsTracker gpsTracker = new GpsTracker(this);
-        TimerTask tt = new TimerTask() {
-            public void run() {
-                GPSdata gpsdata = new GPSdata(gpsTracker.getLongitude(), gpsTracker.getLongitude());
-                GPS gps = new GPS(gpsdata);
-                String GPSlastdata = GpsToJson(gps);
-                AsyncSend(GPSlastdata);
+//        TimerTask tt = new TimerTask() {
+//            public void run() {
+//                GPSdata gpsdata = new GPSdata(gpsTracker.getLongitude(), gpsTracker.getLongitude());
+//                GPS gps = new GPS(gpsdata);
+//                String GPSlastdata = GpsToJson(gps);
+//                AsyncSend(GPSlastdata);
+//            }
+//        };
+
+
+//        Timer timer = new Timer();
+//        timer.schedule(tt, 0, 10000);
+
+        super.onCreate(savedInstanceState);
+
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8) {
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
+        ClientConnected clientConnected = new ClientConnected(new ChatClient(
+                UserCache.getUser(this).getId(),
+                UserCache.getUser(this).getName(),
+                UserCache.getUser(this).getEmail()), new GPSdata(0, 0));
+        String ccdString = ObjectToJson(clientConnected);
+        AsyncConnect(ccdString, (string) -> {
+            Gson gson = new Gson();
+            Packet convertedObject = (Packet) new Gson().fromJson(string, Packet.class);
+            switch (convertedObject.PacketType) {
+                case Message:
+                    Message recieveMsg = (Message) new Gson().fromJson(string, Message.class);
+                    items.add(recieveMsg);
+                    break;
             }
-        };
-        Timer timer = new Timer();
-        timer.schedule(tt, 0, 10000);
+        });
+
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setItems(items);
+        binding.imgSendBtn.setOnClickListener(view -> {
+            if (binding.editText3.getText().toString() != null || !binding.editText3.getText().toString().equals(""))
+                send(binding.getMessage1().toString());
+        });
+        setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setTitle("");
         runOnUiThread(() -> {
-            super.onCreate(savedInstanceState);
-
-            int SDK_INT = android.os.Build.VERSION.SDK_INT;
-            if (SDK_INT > 8) {
-
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                StrictMode.setThreadPolicy(policy);
-            }
-
-            ClientConnected clientConnected = new ClientConnected(new ChatClient(
-                    UserCache.getUser(this).getId(),
-                    UserCache.getUser(this).getName(),
-                    UserCache.getUser(this).getEmail()), new GPSdata(gpsTracker.getLongitude(), gpsTracker.getLongitude()));
-            String ccdString = ObjectToJson(clientConnected);
-
-            AsyncConnect(ccdString, (string) -> {
-                Gson gson = new Gson();
-                Packet convertedObject = (Packet) new Gson().fromJson(string, Packet.class);
-                switch (convertedObject.PacketType) {
-                    case Message:
-                        Message recieveMsg = (Message) new Gson().fromJson(string, Message.class);
-                        items.add(recieveMsg);
-                        break;
-                }
-            });
-
-
-            binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-            binding.setItems(items);
-            binding.imgSendBtn.setOnClickListener(view -> {
-                if (binding.editText3.getText().toString() != null || !binding.editText3.getText().toString().equals(""))
-                    send(binding.getMessage1().toString());
-            });
-            setSupportActionBar(binding.toolbar);
-            getSupportActionBar().setTitle("");
-            runOnUiThread(() -> {
-                Message message = new Message();
-            });
-
-
+            Message message = new Message();
         });
 
 
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         ClientDisConnect disConnect = new ClientDisConnect();
         String data = DsctToJson(disConnect);
         AsyncSend(data);
-        AsyncDelay(3000,()-> {
+        AsyncDelay(3000, () -> {
             try {
                 socket.close();
             } catch (IOException e) {
@@ -187,9 +187,11 @@ public class MainActivity extends AppCompatActivity {
     interface RecivedDataFunc {
         void OnRecivedData(String data);
     }
+
     interface DelayFunc {
         void OnDelayed();
     }
+
     class ConnectThread extends Thread {
         RecivedDataFunc recivedDataFunc;
         String connectPacket;
@@ -201,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
         public void run() {
             try {
-                socket = new Socket("112.154.88.112", 20310);
+
 
                 AsyncListening(recivedDataFunc);
                 AsyncSend(connectPacket);
@@ -217,7 +219,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     class DelayThread extends Thread {
+
+
         DelayFunc delayFunc;
         int delay;
 
@@ -255,6 +260,8 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             try {
                 while (true) {
+
+
                     InputStream input = socket.getInputStream();
 
                     byte[] header = new byte[4];
@@ -299,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     public static String DsctToJson(ClientDisConnect clientDisConnect) {
         Gson msgGson = new Gson();
         return msgGson.toJson(clientDisConnect);
