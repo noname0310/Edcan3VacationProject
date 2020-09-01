@@ -50,15 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private int port = 20310;
 
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     @Override
@@ -67,18 +58,18 @@ public class MainActivity extends AppCompatActivity {
         mHandler = new Handler();
 
 
-        try {
-            setSocket(ip, port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            setSocket(ip, port);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.imgSendBtn.setOnClickListener(view -> {
-            if (binding.editText3.getText().toString() != null || !binding.editText3.getText().toString().equals(""))
-                send();
-        });
+//        binding.imgSendBtn.setOnClickListener(view -> {
+//            if (binding.editText3.getText().toString() != null || !binding.editText3.getText().toString().equals(""))
+//                send();
+//        });
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle("");
         Message message = new Message();
@@ -110,40 +101,40 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
-
-    public void setSocket(String ip, int port) throws IOException {
-
-        try {
-            socket = new Socket(ip, port);
-            networkWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            networkReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            System.out.println(e);
-            e.printStackTrace();
-        }
-
-    }
-
-    public void send() {
-        Message msg = new Message(new ChatClient(
-                UserCache.getUser(mContext).getId(),
-                UserCache.getUser(mContext).getName(),
-                UserCache.getUser(mContext).getEmail()),
-                binding.getMessage1().toString());
-        String msgGson = MsgToJson(mContext, msg);
-        byte[]  arr = msgGson.getBytes(StandardCharsets.UTF_8);
-        byte[] header = ByteBuffer.allocate(4).putInt(arr.length).array();
-        byte[] content = new byte[header.length + arr.length];
-        System.arraycopy(header,0, content, 0, header.length );
-        System.arraycopy(arr,0, content, header.length, arr.length );
-
-
-
-    }
-
-    public static String MsgToJson(Context context, Message msg) {
-        Gson msgGson = new Gson();
-        return msgGson.toJson(msg);
-    }
+//
+//    public void setSocket(String ip, int port) throws IOException {
+//
+//        try {
+//            socket = new Socket(ip, port);
+//            networkWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+//            networkReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//        } catch (IOException e) {
+//            System.out.println(e);
+//            e.printStackTrace();
+//        }
+//
+//    }
+//
+//    public void send() {
+//        Message msg = new Message(new ChatClient(
+//                UserCache.getUser(mContext).getId(),
+//                UserCache.getUser(mContext).getName(),
+//                UserCache.getUser(mContext).getEmail()),
+//                binding.getMessage1().toString());
+//        String msgGson = MsgToJson(mContext, msg);
+//        byte[]  arr = msgGson.getBytes(StandardCharsets.UTF_8);
+//        byte[] header = ByteBuffer.allocate(4).putInt(arr.length).array();
+//        byte[] content = new byte[header.length + arr.length];
+//        System.arraycopy(header,0, content, 0, header.length );
+//        System.arraycopy(arr,0, content, header.length, arr.length );
+//
+//
+//
+//    }
+//
+//    public static String MsgToJson(Context context, Message msg) {
+//        Gson msgGson = new Gson();
+//        return msgGson.toJson(msg);
+//    }
 
 }
