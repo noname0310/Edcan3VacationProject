@@ -1,0 +1,25 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary1</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="color">@color/colorPrimaryBright</item>
+        <item name="colorAccent">@color/colorAccent</item>
+<!--        <item name="windowActionBar">false</item>-->
+        <item name="windowNoTitle">true</item>
+        <item name="actionOverflowButtonStyle">@style/OverFlow</item>
+
+    </style>
+    
+    <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_baseline_settings_24</item>
+        <item name="android:tint">@color/colorPrimaryBright</item>
+    </style>
+
+    <style name="TitleBarAppearance" parent="AppTheme">
+        <item name="colorControlNormal">@color/colorText</item>
+        <item name="android:textColorSecondary">@color/colorPrimaryBright</item>
+    </style>
+
+</resources>
