@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/notosanskrbold"
-                android:text="현재 2명이 15m 내에 있습니다"
+                android:text="현재 5명이 15m 내에 있습니다"
                 android:textColor="@color/colorText"
                 android:textSize="18sp" />
 
