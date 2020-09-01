@@ -1,22 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using TinyChatServer.Model;
 using TinyChatServer.Server.ClientProcess;
-using TinyChatServer.ChatServer.ChatLinker;
 using Newtonsoft.Json.Linq;
 
 namespace TinyChatServer.ChatServer
 {
     public class ChatClient
     {
+        public delegate void GPSUpdateHandler(ChatClient chatClient);
+        public event GPSUpdateHandler OnGPSUpdated;
+        
         public readonly ClientSocket ClientSocket;
         public readonly string UserEmail;
 
         public string Id { get; set; }
         public string Name { get; set; }
-        public GPSdata GPSdata { get; set; }
-        public Link Link { get; private set; }
+        public GPSdata GPSdata {
+            get 
+            {
+                return gPSdata;
+            } 
+            set 
+            {
+                gPSdata = value;
+                OnGPSUpdated?.Invoke(this);
+            } 
+        }
+        public GPSdata gPSdata;
+        public List<ChatClient> LinkedClients { get; private set; }
+
+        private Message PrevMessage;
 
         public ChatClient(ClientSocket clientSocket, string userEmail, string id, string name, GPSdata gPSdata)
         {
@@ -26,46 +39,40 @@ namespace TinyChatServer.ChatServer
             Id = id;
             Name = name;
             GPSdata = gPSdata;
-            Link.OnClientMessageRecived += Link_OnClientMessageRecived;
-            Link.AddClient(this);
+            LinkedClients = new List<ChatClient>();
         }
 
-        private void Link_OnClientMessageRecived(ChatClient chatClient, Message msg)
+        public void OnClientMessageRecived(Message message)
         {
-            SendData(msg);
-        }
+            if (UserEmail == message.ChatClient.UserEmail)
+                return;
 
-        public void ChangeLink(Link link)
-        {
-            if (Link != null)
+            if (PrevMessage == message)
+                return;
+
+            PrevMessage = message;
+
+            SendData(message);
+
+            foreach (var item in LinkedClients)
             {
-                Link.RemoveClient(this);
-                Link.OnClientMessageRecived -= Link_OnClientMessageRecived;
+                item.OnClientMessageRecived(message);
             }
-
-            Link = link;
-            Link.OnClientMessageRecived += Link_OnClientMessageRecived;
-            Link.AddClient(this);
         }
 
         public void SendData(Packet packet)
         {
             JObject jObject = JObject.FromObject(packet);
-            ClientSocket.Send(jObject.ToString());
-        }
-
-        public void UpdateGPS(GPSdata gPSdata)
-        {
-            GPSdata = gPSdata;
+            ClientSocket.AsyncSend(jObject.ToString());
         }
     }
 
     public struct GPSdata
     {
-        public float Longitude;
-        public float Latitude;
+        public double Longitude;
+        public double Latitude;
 
-        public GPSdata(float longitude, float latitude)
+        public GPSdata(double longitude, double latitude)
         {
             Longitude = longitude;
             Latitude = latitude;

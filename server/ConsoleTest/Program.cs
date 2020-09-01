@@ -13,6 +13,7 @@ namespace ConsoleTest
             chatServer.OnMessageRecived += ChatServer_OnMessageRecived;
             chatServer.OnErrMessageRecived += ChatServer_OnErrMessageRecived;
             chatServer.Start();
+            chatServer.RunSyncRoutine();
         }
 
         private static void ChatServer_OnErrMessageRecived(string msg) => Console.WriteLine(msg);
