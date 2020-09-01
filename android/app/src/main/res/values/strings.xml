@@ -1,8 +1,0 @@
-<resources>
-    <string name="facebook_app_id">310076706762119</string> <string name="fb_login_protocol_scheme">fb310076706762119</string>
-    <string name="app_name">Edcan3VacationProject</string>
-    <string name="chatty">CHATTY</string>
-    <string name="id">ID</string>
-    <string name="pw">PW</string>
-    <string name="log_in">LOG IN</string>
-</resources>
