@@ -446,4 +446,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-GUIConsole\Library
+GUIConsole/Library
