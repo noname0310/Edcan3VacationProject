@@ -63,58 +63,83 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
-        GpsTracker gpsTracker = new GpsTracker(this);
-//        TimerTask tt = new TimerTask() {
-//            public void run() {
-//                GPSdata gpsdata = new GPSdata(gpsTracker.getLongitude(), gpsTracker.getLongitude());
-//                GPS gps = new GPS(gpsdata);
-//                String GPSlastdata = GpsToJson(gps);
-//                AsyncSend(GPSlastdata);
-//            }
-//        };
-
-
-//        Timer timer = new Timer();
-//        timer.schedule(tt, 0, 10000);
-
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if (SDK_INT > 8) {
+        if (SDK_INT > 8){
 
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
 
-        ClientConnected clientConnected = new ClientConnected(new ChatClient(
-                UserCache.getUser(this).getId(),
-                UserCache.getUser(this).getName(),
-                UserCache.getUser(this).getEmail()), new GPSdata(0, 0));
-        String ccdString = ObjectToJson(clientConnected);
-        AsyncConnect(ccdString, (string) -> {
-            Gson gson = new Gson();
-            Packet convertedObject = (Packet) new Gson().fromJson(string, Packet.class);
-            switch (convertedObject.PacketType) {
-                case Message:
-                    Message recieveMsg = (Message) new Gson().fromJson(string, Message.class);
-                    items.add(recieveMsg);
-                    break;
-            }
+        Toast.makeText(getApplicationContext(), "Connecting to server...", Toast.LENGTH_SHORT).show();
+        AsyncConnect("{\n" +
+                "  \"ChatClient\": {\n" +
+                "    \"Id\": \"a\",\n" +
+                "    \"Name\": \"s\",\n" +
+                "    \"UserEmail\": \"d\"\n" +
+                "  },\n" +
+                "  \"GPSdata\": {\n" +
+                "    \"Longitude\": 0.0,\n" +
+                "    \"Latitude\": 0.0\n" +
+                "  },\n" +
+                "  \"PacketType\": 0\n" +
+                "}", (string) -> {
+            Toast.makeText(getApplicationContext(), string, Toast.LENGTH_LONG).show();
+            Log.i("TAG", string);
         });
-
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.setItems(items);
-        binding.imgSendBtn.setOnClickListener(view -> {
-            if (binding.editText3.getText().toString() != null || !binding.editText3.getText().toString().equals(""))
-                send(binding.getMessage1().toString());
-        });
-        setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setTitle("");
-        runOnUiThread(() -> {
-            Message message = new Message();
-        });
+//        GpsTracker gpsTracker = new GpsTracker(this);
+////        TimerTask tt = new TimerTask() {
+////            public void run() {
+////                GPSdata gpsdata = new GPSdata(gpsTracker.getLongitude(), gpsTracker.getLongitude());
+////                GPS gps = new GPS(gpsdata);
+////                String GPSlastdata = GpsToJson(gps);
+////                AsyncSend(GPSlastdata);
+////            }
+////        };
+//
+//
+////        Timer timer = new Timer();
+////        timer.schedule(tt, 0, 10000);
+//
+//        super.onCreate(savedInstanceState);
+//
+//        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+//        if (SDK_INT > 8) {
+//
+//            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//            StrictMode.setThreadPolicy(policy);
+//        }
+//
+//        ClientConnected clientConnected = new ClientConnected(new ChatClient(
+//                UserCache.getUser(this).getId(),
+//                UserCache.getUser(this).getName(),
+//                UserCache.getUser(this).getEmail()), new GPSdata(0, 0));
+//        String ccdString = ObjectToJson(clientConnected);
+//        AsyncConnect(ccdString, (string) -> {
+//            Gson gson = new Gson();
+//            Packet convertedObject = (Packet) new Gson().fromJson(string, Packet.class);
+//            switch (convertedObject.PacketType) {
+//                case Message:
+//                    Message recieveMsg = (Message) new Gson().fromJson(string, Message.class);
+//                    items.add(recieveMsg);
+//                    break;
+//            }
+//        });
+//
+//
+//        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+//        binding.setItems(items);
+//        binding.imgSendBtn.setOnClickListener(view -> {
+//            if (binding.editText3.getText().toString() != null || !binding.editText3.getText().toString().equals(""))
+//                send(binding.getMessage1().toString());
+//        });
+//        setSupportActionBar(binding.toolbar);
+//        getSupportActionBar().setTitle("");
+//        runOnUiThread(() -> {
+//            Message message = new Message();
+//        });
 
 
     }
