@@ -35,6 +35,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.example.edcan3vacationproject.BR.msg;
 
@@ -60,6 +62,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        GpsTracker gpsTracker = new GpsTracker(mContext);
+        TimerTask tt = new TimerTask() {
+            public void run() {
+                GPSdata gpsdata = new GPSdata(gpsTracker.getLongitude(), gpsTracker.getLongitude());
+                GPS gps = new GPS(gpsdata);
+                String GPSlastdata = GpsToJson(gps);
+                AsyncSend(GPSlastdata);
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(tt, 0, 10000);
         runOnUiThread(() -> {
             super.onCreate(savedInstanceState);
 
@@ -70,8 +83,13 @@ public class MainActivity extends AppCompatActivity {
                 StrictMode.setThreadPolicy(policy);
             }
 
-            Toast.makeText(getApplicationContext(), "Connecting to server...", Toast.LENGTH_SHORT).show();
-            AsyncConnect("{}", (string) -> {
+            ClientConnected clientConnected = new ClientConnected(new ChatClient(
+                    UserCache.getUser(mContext).getId(),
+                    UserCache.getUser(mContext).getName(),
+                    UserCache.getUser(mContext).getEmail()), new GPSdata(gpsTracker.getLongitude(), gpsTracker.getLongitude()));
+            String ccdString = ObjectToJson(clientConnected);
+
+            AsyncConnect(ccdString, (string) -> {
                 Gson gson = new Gson();
                 Packet convertedObject = (Packet) new Gson().fromJson(string, Packet.class);
                 switch (convertedObject.PacketType) {
@@ -87,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             binding.setItems(items);
             binding.imgSendBtn.setOnClickListener(view -> {
                 if (binding.editText3.getText().toString() != null || !binding.editText3.getText().toString().equals(""))
-                send( binding.getMessage1().toString());
+                    send(binding.getMessage1().toString());
             });
             setSupportActionBar(binding.toolbar);
             getSupportActionBar().setTitle("");
@@ -130,17 +148,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {  //앱 종료시
         super.onStop();
-        try {
-            socket.close(); //소켓을 닫는다.
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ClientDisConnect disConnect = new ClientDisConnect();
+        String data = DsctToJson(disConnect);
+        AsyncSend(data);
+        AsyncDelay(3000,()-> {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
+
+
+    public void AsyncDelay(int initData, DelayFunc delayFunc) {
+        DelayThread thread = new DelayThread(initData, delayFunc);
+        thread.start();
+    }
+
 
     public void AsyncConnect(String initData, RecivedDataFunc recivedDataFunc) {
         ConnectThread thread = new ConnectThread(initData, recivedDataFunc);
         thread.start();
     }
+
 
     public void AsyncListening(RecivedDataFunc recivedDataFunc) {
         ListenerThread thread = new ListenerThread(recivedDataFunc);
@@ -155,7 +187,9 @@ public class MainActivity extends AppCompatActivity {
     interface RecivedDataFunc {
         void OnRecivedData(String data);
     }
-
+    interface DelayFunc {
+        void OnDelayed();
+    }
     class ConnectThread extends Thread {
         RecivedDataFunc recivedDataFunc;
         String connectPacket;
@@ -181,6 +215,25 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+    class DelayThread extends Thread {
+        DelayFunc delayFunc;
+        int delay;
+
+        public DelayThread(int delay, DelayFunc delayFunc) {
+            this.delay = delay;
+            this.delayFunc = delayFunc;
+        }
+
+        public void run() {
+
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            runOnUiThread(() -> delayFunc.OnDelayed());
         }
     }
 
@@ -246,20 +299,33 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+    public static String DsctToJson(ClientDisConnect clientDisConnect) {
+        Gson msgGson = new Gson();
+        return msgGson.toJson(clientDisConnect);
+    }
 
+    public static String GpsToJson(GPS gps) {
+        Gson msgGson = new Gson();
+        return msgGson.toJson(gps);
+    }
+
+    public static String ObjectToJson(ClientConnected ccd) {
+        Gson msgGson = new Gson();
+        return msgGson.toJson(ccd);
+    }
 
     public static String MsgToJson(Message msg) {
-
         Gson msgGson = new Gson();
         return msgGson.toJson(msg);
     }
-    public void send(String message1){
+
+    public void send(String message1) {
         Context context = null;
         Message msg = new Message(new ChatClient(
                 UserCache.getUser(context).getId(),
                 UserCache.getUser(context).getName(),
                 UserCache.getUser(context).getEmail()),
-               message1);
+                message1);
         String msgGson = MsgToJson(msg);
         AsyncSend(msgGson);
     }
