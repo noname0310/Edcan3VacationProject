@@ -48,13 +48,14 @@ namespace TinyChatServer.ChatServer
 
         private void SocketServer_OnClientConnected(ClientSocket client)
         {
+            if (ClientAuthenticationQueue.ContainsKey(client.IPAddress))
+                ClientAuthenticationQueue.Remove(client.IPAddress);
             ClientAuthenticationQueue.Add(client.IPAddress, client);
             OnMessageRecived?.Invoke(string.Format("SocketServer_OnClientConnected {0}", client.IPAddress.ToString()));
         }
         private void SocketServer_OnClientDataRecived(ClientSocket client, string msg)
         {
-            //OnMessageRecived?.Invoke(string.Format("SocketServer_OnClientConnected {0}", msg));
-            //return;
+            OnMessageRecived?.Invoke(string.Format("SocketServer_OnClientDataRecived {0}", msg));
             JObject jObject = JObject.Parse(msg);
 
             PacketType packetType = jObject.ToObject<Packet>().PacketType;
@@ -62,11 +63,12 @@ namespace TinyChatServer.ChatServer
             if (packetType == PacketType.ClientConnected)
             {
 
-                if (!ClientAuthenticationQueue.ContainsKey(client.IPAddress))
+                if (ClientAuthenticationQueue.ContainsKey(client.IPAddress))
                 {
                     ChatClient chatClient = ChatClientManager.AddClient(client, jObject.ToObject<ClientConnected>());
                     OnMessageRecived?.Invoke(string.Format("Client {0} authenticized", client.IPAddress.ToString()));
                     OnClientConnected?.Invoke(chatClient);
+                    ClientAuthenticationQueue.Remove(client.IPAddress);
                 }
                 else
                     OnErrMessageRecived?.Invoke(string.Format("Client {0} trying authenticize mulitiple times!", client.IPAddress.ToString()));

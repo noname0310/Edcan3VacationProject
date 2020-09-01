@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Net;
 using System.Threading;
 using TinyChatServer.ChatServer;
+using TinyChatServer.Model;
 
 namespace ConsoleTest
 {

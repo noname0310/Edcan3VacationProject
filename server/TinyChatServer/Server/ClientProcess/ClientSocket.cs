@@ -116,6 +116,12 @@ namespace TinyChatServer.Server.ClientProcess
                 AsyncOnMessageRecived?.Invoke("Error Handled, Client force disconnected");
                 Dispose();
             }
+            catch(ObjectDisposedException e)
+            {
+                AsyncOnErrMessageRecived?.Invoke(e.Message);
+                AsyncOnMessageRecived?.Invoke("Error Handled, Client force disconnected");
+                Dispose();
+            }
         }
 
         public void AsyncSend(string content)
@@ -128,7 +134,8 @@ namespace TinyChatServer.Server.ClientProcess
             System.Buffer.BlockCopy(header, 0, sendBuffer, 0, header.Length);
             System.Buffer.BlockCopy(contentBuffer, 0, sendBuffer, header.Length, contentBuffer.Length);
 
-            Client.BeginSend(sendBuffer, 0, sendBuffer.Length, 0, new AsyncCallback(SendCallback), Client);
+            if (Client.Connected)
+                Client.BeginSend(sendBuffer, 0, sendBuffer.Length, 0, new AsyncCallback(SendCallback), Client);
         }
 
         private void SendCallback(IAsyncResult ar)
@@ -146,11 +153,12 @@ namespace TinyChatServer.Server.ClientProcess
 
         public void Dispose()
         {
-            AsyncOnClientDisConnect.Invoke(this);
-            Client.Shutdown(SocketShutdown.Both);
+            AsyncOnClientDisConnect?.Invoke(this);
+            if (Client.Connected)
+                Client.Shutdown(SocketShutdown.Both);
             Client.Close();
             Client.Dispose();
-            AsyncOnClientDisConnected.Invoke(this);
+            AsyncOnClientDisConnected?.Invoke(this);
         }
 
         public bool Equals(ClientSocket other)

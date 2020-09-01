@@ -84,8 +84,8 @@ namespace TinyChatServer.Server
         }
         public void Start(uint port)
         {
-            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
+            //IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+            IPAddress ipAddress = IPAddress.Any; /*ipHostInfo.AddressList[0];*/
             Start(new IPEndPoint(ipAddress, (int)port));
         }
 
