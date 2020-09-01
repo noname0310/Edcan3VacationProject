@@ -36,6 +36,8 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
+import static com.example.edcan3vacationproject.BR.msg;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,23 +72,23 @@ public class MainActivity extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "Connecting to server...", Toast.LENGTH_SHORT).show();
             AsyncConnect("{}", (string) -> {
-                    Gson gson = new Gson();
-                    Packet convertedObject = (Packet) new Gson().fromJson(string, Packet.class);
-                    switch (convertedObject.PacketType) {
-                        case Message:
-                            Message recieveMsg = (Message) new Gson().fromJson(string, Message.class);
-                            items.add(recieveMsg);
-                            break;
-                    }
+                Gson gson = new Gson();
+                Packet convertedObject = (Packet) new Gson().fromJson(string, Packet.class);
+                switch (convertedObject.PacketType) {
+                    case Message:
+                        Message recieveMsg = (Message) new Gson().fromJson(string, Message.class);
+                        items.add(recieveMsg);
+                        break;
+                }
             });
 
 
             binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
             binding.setItems(items);
-           binding.imgSendBtn.setOnClickListener(view -> {
-               if (binding.editText3.getText().toString() != null || !binding.editText3.getText().toString().equals(""))
-                    Message message = new Message();
-           });
+            binding.imgSendBtn.setOnClickListener(view -> {
+                if (binding.editText3.getText().toString() != null || !binding.editText3.getText().toString().equals(""))
+                send( binding.getMessage1().toString());
+            });
             setSupportActionBar(binding.toolbar);
             getSupportActionBar().setTitle("");
             runOnUiThread(() -> {
@@ -246,12 +248,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-    public static String MsgToJson(, Message msg) {
+    public static String MsgToJson(Message msg) {
 
         Gson msgGson = new Gson();
         return msgGson.toJson(msg);
     }
-
+    public void send(String message1){
+        Context context = null;
+        Message msg = new Message(new ChatClient(
+                UserCache.getUser(context).getId(),
+                UserCache.getUser(context).getName(),
+                UserCache.getUser(context).getEmail()),
+               message1);
+        String msgGson = MsgToJson(msg);
+        AsyncSend(msgGson);
+    }
 }
