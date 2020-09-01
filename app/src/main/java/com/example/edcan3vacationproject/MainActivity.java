@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ObservableArrayList;
 
-import android.content.Context;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,7 +43,7 @@ import static com.example.edcan3vacationproject.BR.msg;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Context mContext;
+
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        GpsTracker gpsTracker = new GpsTracker(mContext);
+        GpsTracker gpsTracker = new GpsTracker(this);
         TimerTask tt = new TimerTask() {
             public void run() {
                 GPSdata gpsdata = new GPSdata(gpsTracker.getLongitude(), gpsTracker.getLongitude());
@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             ClientConnected clientConnected = new ClientConnected(new ChatClient(
-                    UserCache.getUser(mContext).getId(),
-                    UserCache.getUser(mContext).getName(),
-                    UserCache.getUser(mContext).getEmail()), new GPSdata(gpsTracker.getLongitude(), gpsTracker.getLongitude()));
+                    UserCache.getUser(this).getId(),
+                    UserCache.getUser(this).getName(),
+                    UserCache.getUser(this).getEmail()), new GPSdata(gpsTracker.getLongitude(), gpsTracker.getLongitude()));
             String ccdString = ObjectToJson(clientConnected);
 
             AsyncConnect(ccdString, (string) -> {
@@ -320,11 +320,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void send(String message1) {
-        Context context = null;
+
         Message msg = new Message(new ChatClient(
-                UserCache.getUser(context).getId(),
-                UserCache.getUser(context).getName(),
-                UserCache.getUser(context).getEmail()),
+                UserCache.getUser(this).getId(),
+                UserCache.getUser(this).getName(),
+                UserCache.getUser(this).getEmail()),
                 message1);
         String msgGson = MsgToJson(msg);
         AsyncSend(msgGson);
