@@ -47,7 +47,14 @@ namespace TinyChatServer.Server.ClientProcess
             ClientSocket clientSocket = new ClientSocket(PacketSize, Client);
 
             lock (ClientSocketManagerLickObject)
+            {
+                IPAddress iPAddress = (Client.RemoteEndPoint as IPEndPoint).Address;
+                if (ClientSockets.ContainsKey(iPAddress))
+                {
+                    ClientSockets[iPAddress].Dispose();
+                }
                 ClientSockets.Add((Client.RemoteEndPoint as IPEndPoint).Address, clientSocket);
+            }
 
             clientSocket.AsyncOnMessageRecived += ClientSocket_AsyncOnMessageRecived;
             clientSocket.AsyncOnErrMessageRecived += ClientSocket_AsyncOnErrMessageRecived;
