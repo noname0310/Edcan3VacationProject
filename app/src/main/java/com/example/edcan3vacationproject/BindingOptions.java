@@ -24,7 +24,7 @@ public class BindingOptions {
     }
     @BindingAdapter("memoItem")
     public static void bindMemoItem(RecyclerView recyclerView, ObservableArrayList<Message> items) {
-        ChatAdapter adapter = (ChatAdapter)recyclerVi   ew.getAdapter();
+        ChatAdapter adapter = (ChatAdapter)recyclerView.getAdapter();
         if(adapter!=null) adapter.setItem(items);
     }
 

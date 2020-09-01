@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="androidx.databinding.ObservableArrayList"/>
+        <import type="com.example.edcan3vacationproject.Message"/>
+        <variable
+            name="items"
+            type="ObservableArrayList&lt;Message&gt;" />
         <variable
             name="message1"
             type="String" />
@@ -41,7 +45,8 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            tools:listitem="@layout/row_message_receive" />
+            tools:listitem="@layout/row_message_receive"
+            memoItem="@{items}"/>
 
 
         <androidx.constraintlayout.widget.ConstraintLayout

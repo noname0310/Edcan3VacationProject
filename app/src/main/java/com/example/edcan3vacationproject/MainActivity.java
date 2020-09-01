@@ -3,6 +3,7 @@ package com.example.edcan3vacationproject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ObservableArrayList;
 
 import android.content.Context;
 import android.content.Intent;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String ip = " 127.0.0.1";
     private int port = 20310;
-
+    private ObservableArrayList<Message> items = new ObservableArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +70,23 @@ public class MainActivity extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "Connecting to server...", Toast.LENGTH_SHORT).show();
             AsyncConnect("{}", (string) -> {
-                Toast.makeText(getApplicationContext(), string, Toast.LENGTH_LONG).show();
-                Log.i("TAG", string);
+                    Gson gson = new Gson();
+                    Packet convertedObject = (Packet) new Gson().fromJson(string, Packet.class);
+                    switch (convertedObject.PacketType) {
+                        case Message:
+                            Message recieveMsg = (Message) new Gson().fromJson(string, Message.class);
+                            items.add(recieveMsg);
+                            break;
+                    }
             });
 
 
             binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-//           binding.imgSendBtn.setOnClickListener(view -> {
-//               if (binding.editText3.getText().toString() != null || !binding.editText3.getText().toString().equals(""))
-//
-//           });
+            binding.setItems(items);
+           binding.imgSendBtn.setOnClickListener(view -> {
+               if (binding.editText3.getText().toString() != null || !binding.editText3.getText().toString().equals(""))
+                    Message message = new Message();
+           });
             setSupportActionBar(binding.toolbar);
             getSupportActionBar().setTitle("");
             runOnUiThread(() -> {
@@ -237,22 +245,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static void StringtoPacketType(String string) {
-        Gson gson = new Gson();
-        Packet convertedObject = (Packet)new Gson().fromJson(string, Packet.class);
-        switch (convertedObject.PacketType){
-            case Message:
-                Message recieveMsg = (Message) new Gson().fromJson(string, Message.class);
-                break;
-        }
 
 
 
-    }
-
-
-
-    public static String MsgToJson(Context context, Message msg) {
+    public static String MsgToJson(, Message msg) {
 
         Gson msgGson = new Gson();
         return msgGson.toJson(msg);
