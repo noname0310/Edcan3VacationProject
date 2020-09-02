@@ -1,14 +1,20 @@
 package com.example.edcan3vacationproject;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ObservableArrayList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
@@ -16,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.edcan3vacationproject.databinding.ActivityMainBinding;
@@ -23,6 +30,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,10 +46,12 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.example.edcan3vacationproject.BR.msg;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -48,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private ObservableArrayList<Message> items = new ObservableArrayList<>();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private GpsTracker gpsTracker = new GpsTracker(this);
+    private GpsTracker gpsTracker;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -56,17 +67,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
 
+        super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        gpsTracker = new GpsTracker(this);
         binding.setItems(items);
         binding.imgSendBtn.setOnClickListener(view -> {
-            send(binding.getMessage1());
+            TedPermission.with(this)
+                    .setPermissionListener(permissionlistener)
+                    .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                    .setPermissions( Manifest.permission.ACCESS_FINE_LOCATION)
+                    .check();
             items.add(new Message(new ChatClient(
                     UserCache.getUser(this).getId(),
                     UserCache.getUser(this).getName(),
                     UserCache.getUser(this).getEmail()), binding.getMessage1()));
+            binding.revMain.smoothScrollToPosition(items.size()-1);
+            send(binding.getMessage1());
             binding.setMessage1("");
         });
         setSupportActionBar(binding.toolbar);
@@ -95,11 +112,15 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "Connecting to server...", Toast.LENGTH_SHORT).show();
         AsyncConnect(ccdString, (string) -> {
             Gson gson = new Gson();
-            Packet convertedObject = (Packet) new Gson().fromJson(string, Packet.class);
+            Packet convertedObject = gson.fromJson(string, Packet.class);
+            Log.e("a", ObjectToJson(new Message(new ChatClient("a", "b", "c"), "asa")));
+            Log.e("a", string);
+            Log.e("a", convertedObject.PacketType.toString());
             switch (convertedObject.PacketType) {
                 case Message:
-                    Message recieveMsg = (Message) new Gson().fromJson(string, Message.class);
+                    Message recieveMsg = (Message) gson.fromJson(string, Message.class);
                     items.add(recieveMsg);
+                    binding.revMain.smoothScrollToPosition(items.size()-1);
                     break;
             }
         });
@@ -308,4 +329,17 @@ public class MainActivity extends AppCompatActivity {
         String msgGson = ObjectToJson(msg);
         AsyncSend(msgGson);
     }
+    PermissionListener permissionlistener = new PermissionListener() {
+        @Override
+        public void onPermissionGranted() {
+            Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onPermissionDenied(List<String> deniedPermissions) {
+            finish();
+        }
+
+
+    };
 }
