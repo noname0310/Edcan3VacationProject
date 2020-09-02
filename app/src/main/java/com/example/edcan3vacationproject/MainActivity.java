@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setItems(items);
         binding.imgSendBtn.setOnClickListener(view -> {
@@ -95,10 +93,13 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "Connecting to server...", Toast.LENGTH_SHORT).show();
         AsyncConnect(ccdString, (string) -> {
             Gson gson = new Gson();
-            Packet convertedObject = (Packet) new Gson().fromJson(string, Packet.class);
+            Packet convertedObject = gson.fromJson(string, Packet.class);
+            Log.e("a", ObjectToJson(new Message(new ChatClient("a", "b", "c"), "asa")));
+            Log.e("a", string);
+            Log.e("a", convertedObject.PacketType.toString());
             switch (convertedObject.PacketType) {
                 case Message:
-                    Message recieveMsg = (Message) new Gson().fromJson(string, Message.class);
+                    Message recieveMsg = (Message) gson.fromJson(string, Message.class);
                     items.add(recieveMsg);
                     break;
             }

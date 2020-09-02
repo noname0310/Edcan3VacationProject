@@ -42,6 +42,16 @@ namespace TinyChatServer.ChatServer
             LinkedClients = new List<ChatClient>();
         }
 
+        public void OnRootMessageRecived(Message message)
+        {
+            //SendData(message);
+
+            foreach (var item in LinkedClients)
+            {
+                item.OnClientMessageRecived(message);
+            }
+        }
+
         public void OnClientMessageRecived(Message message)
         {
             if (UserEmail == message.ChatClient.UserEmail)

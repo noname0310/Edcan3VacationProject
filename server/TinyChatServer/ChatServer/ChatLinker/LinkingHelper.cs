@@ -42,7 +42,7 @@ namespace TinyChatServer.ChatServer.ChatLinker
 
                 double distance = GPSDistanceMeter(chatClient.GPSdata, other.Value.GPSdata);
 
-                if (distance <= 10)
+                if (distance <= 15)
                 {
                     chatClient.LinkedClients.Add(other.Value);
                     other.Value.LinkedClients.Add(chatClient);
@@ -65,7 +65,7 @@ namespace TinyChatServer.ChatServer.ChatLinker
 
                 double distance = GPSDistanceMeter(chatClient.GPSdata, other.Value.GPSdata);
 
-                if (distance <= 10)
+                if (distance <= 15)
                 {
                     chatClient.LinkedClients.Add(other.Value);
                     other.Value.LinkedClients.Add(chatClient);
