@@ -1,20 +1,14 @@
 package com.example.edcan3vacationproject;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ObservableArrayList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
@@ -22,7 +16,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.edcan3vacationproject.databinding.ActivityMainBinding;
@@ -53,7 +46,6 @@ import java.util.TimerTask;
 import static com.example.edcan3vacationproject.BR.msg;
 
 
-
 public class MainActivity extends AppCompatActivity {
     private Socket socket;
     private ActivityMainBinding binding;
@@ -72,19 +64,21 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         gpsTracker = new GpsTracker(this);
         binding.setItems(items);
+        TedPermission.with(this)
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                .setPermissions( Manifest.permission.ACCESS_FINE_LOCATION)
+                .check();
         binding.imgSendBtn.setOnClickListener(view -> {
-            TedPermission.with(this)
-                    .setPermissionListener(permissionlistener)
-                    .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                    .setPermissions( Manifest.permission.ACCESS_FINE_LOCATION)
-                    .check();
             items.add(new Message(new ChatClient(
                     UserCache.getUser(this).getId(),
                     UserCache.getUser(this).getName(),
                     UserCache.getUser(this).getEmail()), binding.getMessage1()));
             binding.revMain.smoothScrollToPosition(items.size()-1);
-            send(binding.getMessage1());
             binding.setMessage1("");
+           send(binding.getMessage1());
+
+
         });
         setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null)
