@@ -75,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
                     UserCache.getUser(this).getName(),
                     UserCache.getUser(this).getEmail()), binding.getMessage1()));
             binding.revMain.smoothScrollToPosition(items.size()-1);
-            binding.setMessage1("");
-           send(binding.getMessage1());
 
+           send(binding.getMessage1());
+            binding.setMessage1("");
 
         });
         setSupportActionBar(binding.toolbar);
