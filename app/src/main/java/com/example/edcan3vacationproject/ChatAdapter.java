@@ -24,7 +24,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageHolder>
     }
     void setItem(List<Message> list) {
         this.list = list;
-
     }
     @Override
     public int getItemViewType(int position) {

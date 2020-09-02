@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ObservableArrayList;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,11 +48,16 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private ObservableArrayList<Message> items = new ObservableArrayList<>();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private GpsTracker gpsTracker = new GpsTracker(this);
+
+    private static final int GPS_ENABLE_REQUEST_CODE = 2001;
+    private static final int PERMISSIONS_REQUEST_CODE = 100;
+    String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setItems(items);
@@ -60,23 +67,29 @@ public class MainActivity extends AppCompatActivity {
                     UserCache.getUser(this).getId(),
                     UserCache.getUser(this).getName(),
                     UserCache.getUser(this).getEmail()), binding.getMessage1()));
+            binding.setMessage1("");
         });
         setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("");
+        binding.revMain.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        ChatAdapter chatAdapter = new ChatAdapter(UserCache.getUser(this).getEmail());
+        binding.revMain.setAdapter(chatAdapter);
 
-        GpsTracker gpsTracker = new GpsTracker(this);
 
         int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if (SDK_INT > 8){
+        if (SDK_INT > 8) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
+        double latitude = gpsTracker.getLatitude();
+        double longitude = gpsTracker.getLongitude();
+        Toast.makeText(MainActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
         ClientConnected clientConnected = new ClientConnected(new ChatClient(
                 UserCache.getUser(this).getId(),
                 UserCache.getUser(this).getName(),
-                UserCache.getUser(this).getEmail()), new GPSdata(gpsTracker.getLongitude(), gpsTracker.getLongitude()));
+                UserCache.getUser(this).getEmail()), new GPSdata(longitude, latitude));
+
         String ccdString = ObjectToJson(clientConnected);
 
         Toast.makeText(getApplicationContext(), "Connecting to server...", Toast.LENGTH_SHORT).show();
@@ -93,10 +106,13 @@ public class MainActivity extends AppCompatActivity {
 
         TimerTask tt = new TimerTask() {
             public void run() {
-                GPSdata gpsdata = new GPSdata(gpsTracker.getLongitude(), gpsTracker.getLongitude());
-                GPS gps = new GPS(gpsdata);
-                String GPSlastdata = ObjectToJson(gps);
-                AsyncSend(GPSlastdata);
+                double latitude = gpsTracker.getLatitude();
+                double longitude = gpsTracker.getLongitude();
+
+                GPS gps = new GPS(new GPSdata(longitude, latitude));
+                String GpsSend = ObjectToJson(gps);
+                AsyncSend(GpsSend);
+
             }
         };
         Timer timer = new Timer();
@@ -109,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         ClientDisConnect disConnect = new ClientDisConnect();
         String data = ObjectToJson(disConnect);
         AsyncSend(data);
-        AsyncDelay(3000,()-> {
+        AsyncDelay(3000, () -> {
             try {
                 socket.close();
             } catch (IOException e) {
@@ -171,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    class ListenerThread extends Thread{
+    class ListenerThread extends Thread {
         RecivedDataFunc Func;
         byte[] data;
 
@@ -179,14 +195,14 @@ public class MainActivity extends AppCompatActivity {
             this.Func = recivedDataFunc;
         }
 
-        public void run(){
+        public void run() {
             try {
                 while (true) {
                     InputStream input = socket.getInputStream();
 
                     byte[] header = new byte[4];
                     int recivedBytes = input.read(header);
-                    while (recivedBytes < 4){
+                    while (recivedBytes < 4) {
                         input.read(header);
                     }
                     ByteBuffer wrapped = ByteBuffer.wrap(header);
@@ -199,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     runOnUiThread(() -> Func.OnRecivedData(new String(data, StandardCharsets.UTF_8)));
                 }
-            } catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -208,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
     class DataThread extends Thread {
         private String data;
 
-        public DataThread(String data){
+        public DataThread(String data) {
             this.data = data;
         }
 
