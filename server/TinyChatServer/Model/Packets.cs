@@ -13,7 +13,7 @@ namespace TinyChatServer.Model
 
     public class Packet
     {
-        public PacketType PacketType;
+        public string PacketType;
     }
 
     public class Message : Packet, IEquatable<Message>
@@ -23,7 +23,7 @@ namespace TinyChatServer.Model
 
         public Message()
         {
-            PacketType = PacketType.Message;
+            PacketType = Model.PacketType.Message.ToString("G");
         }
 
         public Message(ChatClient chatClient, string msg) : this()
@@ -69,7 +69,7 @@ namespace TinyChatServer.Model
 
         public GPS()
         {
-            PacketType = PacketType.GPS;
+            PacketType = Model.PacketType.GPS.ToString("G");
         }
 
         public GPS(GPSdata gPSdata) : this()
@@ -85,7 +85,7 @@ namespace TinyChatServer.Model
 
         public ClientConnected()
         {
-            PacketType = PacketType.ClientConnected;
+            PacketType = Model.PacketType.ClientConnected.ToString("G");
         }
 
         public ClientConnected(ChatClient chatClient, GPSdata gPSdata) : this()
@@ -99,7 +99,7 @@ namespace TinyChatServer.Model
     {
         public ClientDisConnect()
         {
-            PacketType = PacketType.ClientDisConnect;
+            PacketType = Model.PacketType.ClientDisConnect.ToString("G");
         }
     }
 
