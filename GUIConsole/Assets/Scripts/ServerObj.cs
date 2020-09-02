@@ -5,9 +5,13 @@ public class ServerObj : MonoBehaviour
 {
     public static ChatServer chatServer;
 
-    void Start()
+    void Awake()
     {
         chatServer = new ChatServer();
+    }
+
+    void Start()
+    {
         chatServer.OnMessageRecived += ChatServer_OnMessageRecived;
         chatServer.OnErrMessageRecived += ChatServer_OnErrMessageRecived;
         chatServer.Start();
