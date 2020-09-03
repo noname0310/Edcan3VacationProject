@@ -14,9 +14,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.edcan3vacationproject.databinding.ActivityMainBinding;
@@ -82,6 +85,20 @@ public class MainActivity extends AppCompatActivity {
             binding.setMessage1("");
 
         });
+        binding.editText3.setOnEditorActionListener((v, actionId, event) -> {
+            if (binding.getMessage1().isEmpty())
+                return true;
+            items.add(new Message(new ChatClient(
+                    UserCache.getUser(this).getId(),
+                    UserCache.getUser(this).getName(),
+                    UserCache.getUser(this).getEmail()), binding.getMessage1()));
+            binding.revMain.smoothScrollToPosition(items.size()-1);
+
+            send(binding.getMessage1());
+            binding.setMessage1("");
+            return true;
+        });
+
         setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("");
@@ -90,37 +107,37 @@ public class MainActivity extends AppCompatActivity {
         binding.revMain.setAdapter(chatAdapter);
 
 
-        int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if (SDK_INT > 8) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-        double latitude = gpsTracker.getLatitude();
-        double longitude = gpsTracker.getLongitude();
-        Toast.makeText(MainActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
-        ClientConnected clientConnected = new ClientConnected(new ChatClient(
-                UserCache.getUser(this).getId(),
-                UserCache.getUser(this).getName(),
-                UserCache.getUser(this).getEmail()), new GPSdata(longitude, latitude));
-
-        String ccdString = ObjectToJson(clientConnected);
-
-        Toast.makeText(getApplicationContext(), "Connecting to server...", Toast.LENGTH_SHORT).show();
-        AsyncConnect(ccdString, (string) -> {
-            Gson gson = new Gson();
-            Packet convertedObject = gson.fromJson(string, Packet.class);
-            switch (convertedObject.PacketType) {
-                case Message:
-                    Message recieveMsg = (Message) gson.fromJson(string, Message.class);
-                    items.add(recieveMsg);
-                    binding.revMain.smoothScrollToPosition(items.size()-1);
-                    break;
-                case LinkInfo:
-                    LinkInfo linkInfo = (LinkInfo) gson.fromJson(string, LinkInfo.class);
-                    binding.clientsnum.setText(String.format("현재 %dm 내에 %d명이 있습니다", linkInfo.LinkedClients, linkInfo.SearchRange));
-                    break;
-            }
-        });
+//        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+//        if (SDK_INT > 8) {
+//            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//            StrictMode.setThreadPolicy(policy);
+//        }
+//        double latitude = gpsTracker.getLatitude();
+//        double longitude = gpsTracker.getLongitude();
+//        Toast.makeText(MainActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
+//        ClientConnected clientConnected = new ClientConnected(new ChatClient(
+//                UserCache.getUser(this).getId(),
+//                UserCache.getUser(this).getName(),
+//                UserCache.getUser(this).getEmail()), new GPSdata(longitude, latitude));
+//
+//        String ccdString = ObjectToJson(clientConnected);
+//
+//        Toast.makeText(getApplicationContext(), "Connecting to server...", Toast.LENGTH_SHORT).show();
+//        AsyncConnect(ccdString, (string) -> {
+//            Gson gson = new Gson();
+//            Packet convertedObject = gson.fromJson(string, Packet.class);
+//            switch (convertedObject.PacketType) {
+//                case Message:
+//                    Message recieveMsg = (Message) gson.fromJson(string, Message.class);
+//                    items.add(recieveMsg);
+//                    binding.revMain.smoothScrollToPosition(items.size()-1);
+//                    break;
+//                case LinkInfo:
+//                    LinkInfo linkInfo = (LinkInfo) gson.fromJson(string, LinkInfo.class);
+//                    binding.clientsnum.setText(String.format("현재 %dm 내에 %d명이 있습니다", linkInfo.LinkedClients, linkInfo.SearchRange));
+//                    break;
+//            }
+//        });
 
         TimerTask tt = new TimerTask() {
             public void run() {
@@ -141,9 +158,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         try {
-            socket.close();
+            if (socket != null)
+                socket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
         }
         Toast.makeText(getApplicationContext(), "Connecting to server...", Toast.LENGTH_SHORT).show();
         double latitude = gpsTracker.getLatitude();

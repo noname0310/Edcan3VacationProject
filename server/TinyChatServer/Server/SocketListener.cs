@@ -78,8 +78,15 @@ namespace TinyChatServer.Server
         private void AcceptCallback(IAsyncResult ar)
         {
             ManualResetEvent.Set();
-            Socket clientSocket = Listener.EndAccept(ar);
-            AsyncOnClientConnected?.Invoke(clientSocket);
+            try
+            {
+                Socket clientSocket = Listener.EndAccept(ar);
+                AsyncOnClientConnected?.Invoke(clientSocket);
+            }
+            catch (ObjectDisposedException e)
+            {
+
+            }
         }
     }
 }

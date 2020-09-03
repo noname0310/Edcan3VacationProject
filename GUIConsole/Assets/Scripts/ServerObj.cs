@@ -1,26 +1,42 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using TinyChatServer.ChatServer;
 
 public class ServerObj : MonoBehaviour
 {
-    public static ChatServer chatServer;
+    public ChatServer ChatServer;
+    private IEnumerator Coroutine;
 
     void Awake()
     {
-        chatServer = new ChatServer();
+        ChatServer = new ChatServer();
     }
 
     void Start()
     {
-        chatServer.OnMessageRecived += ChatServer_OnMessageRecived;
-        chatServer.OnErrMessageRecived += ChatServer_OnErrMessageRecived;
-        chatServer.Start();
-        StartCoroutine(chatServer.GetSyncRoutine());
+        ChatServer.OnMessageRecived += ChatServer_OnMessageRecived;
+        ChatServer.OnErrMessageRecived += ChatServer_OnErrMessageRecived;
+        StartServer();
     }
 
     void OnDestroy()
     {
-        chatServer.Stop();
+        StopServer();
+    }
+
+    public void StartServer()
+    {
+        ChatServer.Start();
+        Coroutine = ChatServer.GetSyncRoutine();
+        StartCoroutine(Coroutine);
+    }
+
+    public void StopServer()
+    {
+        ChatServer.Stop();
+        for (int i = 0; i < 30; i++)
+            Coroutine.MoveNext();
+        StopCoroutine(Coroutine);
     }
 
     private static void ChatServer_OnErrMessageRecived(string msg) => IGConsole.Instance.printWarnln(msg);

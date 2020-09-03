@@ -257,10 +257,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 71412652}
-  - component: {fileID: 71412653}
   - component: {fileID: 71412651}
-  - component: {fileID: 71412654}
   - component: {fileID: 71412655}
+  - component: {fileID: 71412654}
+  - component: {fileID: 71412653}
   m_Layer: 0
   m_Name: ConsoleManager
   m_TagString: Untagged
@@ -277,7 +277,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 71412650}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dcdcd3554f297e47803cd3edcbc0b92, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b48f76f7c0f5a64c99f1bb1c9482a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &71412652
@@ -303,12 +303,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 71412650}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34258872423fee24e8fe9da6d11f5be9, type: 3}
+  m_Script: {fileID: 11500000, guid: 1df9f0e0b5754d14a8062179724de7a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainConsoleContent: {fileID: 0}
-  MainScrollView: {fileID: 0}
-  MainTextPrefab: {fileID: 5610756288234880764, guid: b01379261dd3ee94eb001b10f6bfde7e, type: 3}
 --- !u!114 &71412654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,9 +315,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 71412650}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247bb27a742faba49a3006f8ca8ff073, type: 3}
+  m_Script: {fileID: 11500000, guid: 037c2625b06b51247a58a093f8447137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MainConsoleContent: {fileID: 0}
+  MainScrollView: {fileID: 0}
+  MainTextPrefab: {fileID: 5610756288234880764, guid: a5b5ddf6af828164cbb2a231e02f919d, type: 3}
 --- !u!114 &71412655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,7 +330,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 71412650}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7dc1dc9761a1ab43a704a7a6d1229c0, type: 3}
+  m_Script: {fileID: 11500000, guid: f47cb2dd0959bd741876556cca13ed43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inputFieldObj: {fileID: 0}

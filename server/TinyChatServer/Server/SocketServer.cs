@@ -99,9 +99,8 @@ namespace TinyChatServer.Server
 
             SocketListener.Stop();
             ClientSocketManager.Dispose();
-            Thread.Sleep(1000);
-
             Running = false;
+            Thread.Sleep(1000);
         }
 
         public void RunSyncRoutine()

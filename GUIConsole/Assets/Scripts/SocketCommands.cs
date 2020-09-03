@@ -6,23 +6,23 @@ namespace Assets.Scripts
 {
     public class SocketCommands : CommandCore
     {
-        ChatServer ChatServer;
+        ServerObj Serverobj;
 
-        public SocketCommands(ChatServer chatServer)
+        public SocketCommands(ServerObj serverobj)
         {
-            ChatServer = chatServer;
+            Serverobj = serverobj;
         }
 
         [Command("start")]
         public void ServerStartCommand(string command, string[] args)
         {
-            ChatServer.Start();
+            Serverobj.StartServer();
         }
 
         [Command("stop")]
         public void ServerStopCommand(string command, string[] args)
         {
-            ChatServer.Stop();
+            Serverobj.StopServer();
         }
 
         [Command("quit")]
@@ -35,13 +35,13 @@ namespace Assets.Scripts
         public void ServerSetRangeCommand(string command, string[] args)
         {
             if (args.Length == 0)
-                IGConsole.Instance.println(string.Format("Current Chat Link Range: {0}m", ChatServer.IChatClientManager.SearchRange));
+                IGConsole.Instance.println(string.Format("Current Chat Link Range: {0}m", Serverobj.ChatServer.IChatClientManager.SearchRange));
             else
             {
                 int parsedint;
                 if (int.TryParse(args[0], out parsedint)) 
                 {
-                    ChatServer.IChatClientManager.SearchRange = parsedint;
+                    Serverobj.ChatServer.IChatClientManager.SearchRange = parsedint;
                     IGConsole.Instance.println(string.Format("Chat link range setted to {0}m", parsedint));
                 }
                 else

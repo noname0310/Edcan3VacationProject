@@ -31,7 +31,7 @@ public class CommandObj : MonoBehaviour
 
         CommandDelegates = new Dictionary<string, CommandDelegate>();
         commandManager = new CommandManager();
-        SocketCommands = new SocketCommands(ServerObj.chatServer);
+        SocketCommands = new SocketCommands(transform.GetComponent<ServerObj>());
 
         CommandBuffer = new LinkedList<string>();
         CommandBufferSearchIndex = null;

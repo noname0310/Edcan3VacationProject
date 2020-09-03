@@ -69,6 +69,7 @@
                 android:background="@android:color/white"
                 android:padding="8dp"
                 android:text="@={message1}"
+                android:imeOptions="actionSend"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/img_send_btn"
                 app:layout_constraintStart_toStartOf="parent" />
