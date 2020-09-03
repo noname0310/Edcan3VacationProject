@@ -4,8 +4,6 @@ public enum PacketType {
     ClientConnected,
     ClientDisConnect,
     Message,
-    GPS;
-
-    PacketType() {
-    }
+    GPS,
+    LinkInfo
 }

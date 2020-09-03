@@ -31,6 +31,26 @@ namespace Assets.Scripts
             Application.Quit();
         }
 
+        [Command("range")]
+        public void ServerSetRangeCommand(string command, string[] args)
+        {
+            if (args.Length == 0)
+                IGConsole.Instance.println(string.Format("Current Chat Link Range: {0}m", ChatServer.IChatClientManager.SearchRange));
+            else
+            {
+                int parsedint;
+                if (int.TryParse(args[0], out parsedint)) 
+                {
+                    ChatServer.IChatClientManager.SearchRange = parsedint;
+                    IGConsole.Instance.println(string.Format("Chat link range setted to {0}m", parsedint));
+                }
+                else
+                {
+                    IGConsole.Instance.println("invaid parms!");
+                }
+            }
+        }
+
         [Command("status")]
         public void ServerStatusCommand(string command, string[] args)
         {
@@ -44,6 +64,7 @@ namespace Assets.Scripts
                 "start - start server\n" +
                 "stop - stop server\n" +
                 "quit - quit server\n" +
+                "range - set chat range\n" +
                 "status - view clients status\n"
                 , false);
         }

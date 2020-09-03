@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -107,14 +109,15 @@ public class MainActivity extends AppCompatActivity {
         AsyncConnect(ccdString, (string) -> {
             Gson gson = new Gson();
             Packet convertedObject = gson.fromJson(string, Packet.class);
-            Log.e("a", ObjectToJson(new Message(new ChatClient("a", "b", "c"), "asa")));
-            Log.e("a", string);
-            Log.e("a", convertedObject.PacketType.toString());
             switch (convertedObject.PacketType) {
                 case Message:
                     Message recieveMsg = (Message) gson.fromJson(string, Message.class);
                     items.add(recieveMsg);
                     binding.revMain.smoothScrollToPosition(items.size()-1);
+                    break;
+                case LinkInfo:
+                    LinkInfo linkInfo = (LinkInfo) gson.fromJson(string, LinkInfo.class);
+                    binding.clientsnum.setText(String.format("현재 %dm 내에 %d명이 있습니다", linkInfo.LinkedClients, linkInfo.SearchRange));
                     break;
             }
         });
@@ -135,19 +138,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(getApplicationContext(), "Connecting to server...", Toast.LENGTH_SHORT).show();
+        double latitude = gpsTracker.getLatitude();
+        double longitude = gpsTracker.getLongitude();
+        ClientConnected clientConnected = new ClientConnected(new ChatClient(
+                UserCache.getUser(this).getId(),
+                UserCache.getUser(this).getName(),
+                UserCache.getUser(this).getEmail()), new GPSdata(longitude, latitude));
+        String ccdString = ObjectToJson(clientConnected);
+        AsyncConnect(ccdString, (string) -> {
+            Gson gson = new Gson();
+            Packet convertedObject = gson.fromJson(string, Packet.class);
+            switch (convertedObject.PacketType) {
+                case Message:
+                    Message recieveMsg = (Message) gson.fromJson(string, Message.class);
+                    items.add(recieveMsg);
+                    binding.revMain.smoothScrollToPosition(items.size()-1);
+                    break;
+                case LinkInfo:
+                    LinkInfo linkInfo = (LinkInfo) gson.fromJson(string, LinkInfo.class);
+                    binding.clientsnum.setText(String.format("현재 %d명이 %dm 내에 있습니다", linkInfo.LinkedClients, linkInfo.SearchRange));
+                    break;
+            }
+        });
+    }
+
+    @Override
     protected void onStop() {  //앱 종료시
         super.onStop();
         ClientDisConnect disConnect = new ClientDisConnect();
         String data = ObjectToJson(disConnect);
         AsyncSend(data);
-        AsyncDelay(3000, () -> {
+        //AsyncDelay(3000, () -> {
             try {
                 socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
-
+        //});
     }
 
     public void AsyncDelay(int initData, DelayFunc delayFunc) {
