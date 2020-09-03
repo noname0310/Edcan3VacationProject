@@ -13,7 +13,7 @@ namespace TinyChatServer.ChatServer.ChatLinker
             ChatClients = chatClients;
         }
         
-        public void InitLinks()
+        public void InitLinks(int searchRange)
         {
             foreach (var item in ChatClients)
             {
@@ -25,13 +25,13 @@ namespace TinyChatServer.ChatServer.ChatLinker
 
                     double distance = GPSDistanceMeter(item.Value.GPSdata, other.Value.GPSdata);
 
-                    if (distance <= 10)
+                    if (distance <= searchRange)
                         item.Value.LinkedClients.Add(other.Value);
                 }
             }
         }
 
-        public void LinkClient(ChatClient chatClient)
+        public void LinkClient(ChatClient chatClient, int searchRange)
         {
             chatClient.LinkedClients.Clear();
 
@@ -42,7 +42,7 @@ namespace TinyChatServer.ChatServer.ChatLinker
 
                 double distance = GPSDistanceMeter(chatClient.GPSdata, other.Value.GPSdata);
 
-                if (distance <= 15)
+                if (distance <= searchRange)
                 {
                     chatClient.LinkedClients.Add(other.Value);
                     other.Value.LinkedClients.Add(chatClient);
@@ -50,7 +50,7 @@ namespace TinyChatServer.ChatServer.ChatLinker
             }
         }
 
-        public void UpdateLink(ChatClient chatClient)
+        public void UpdateLink(ChatClient chatClient, int searchRange)
         {
             foreach (var item in chatClient.LinkedClients)
             {
@@ -65,7 +65,7 @@ namespace TinyChatServer.ChatServer.ChatLinker
 
                 double distance = GPSDistanceMeter(chatClient.GPSdata, other.Value.GPSdata);
 
-                if (distance <= 15)
+                if (distance <= searchRange)
                 {
                     chatClient.LinkedClients.Add(other.Value);
                     other.Value.LinkedClients.Add(chatClient);

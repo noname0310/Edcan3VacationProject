@@ -8,13 +8,20 @@ using TinyChatServer.ChatServer.ChatLinker;
 
 namespace TinyChatServer.ChatServer
 {
-    class ChatClientManager
+    public interface IChatClientManager
+    {
+        IReadOnlyDictionary<IPAddress, ChatClient> ReadOnlyChatClients { get; set; }
+        int SearchRange { get; set; }
+    }
+
+    class ChatClientManager : IChatClientManager
     {
         public delegate void MessageHandler(string msg);
         //public event MessageHandler OnMessageRecived;
         public event MessageHandler OnErrMessageRecived;
 
-        public IReadOnlyDictionary<IPAddress, ChatClient> ReadOnlyChatClients;
+        public IReadOnlyDictionary<IPAddress, ChatClient> ReadOnlyChatClients { get; set; }
+        public int SearchRange { get; set; }
 
         private Dictionary<IPAddress, ChatClient> ChatClients;
 
@@ -22,6 +29,7 @@ namespace TinyChatServer.ChatServer
 
         public ChatClientManager()
         {
+            SearchRange = 30;
             ChatClients = new Dictionary<IPAddress, ChatClient>();
             ReadOnlyChatClients = ChatClients;
 
@@ -65,14 +73,19 @@ namespace TinyChatServer.ChatServer
                 clientConnectedinfo.ChatClient.Name,
                 new GPSdata(clientConnectedinfo.GPSdata)
                 );
-            LinkingHelper.LinkClient(chatClient);
+            LinkingHelper.LinkClient(chatClient, SearchRange);
+            chatClient.SendData(new LinkInfo(chatClient.LinkedClients.Count, SearchRange));
             chatClient.OnGPSUpdated += ChatClient_OnGPSUpdated;
 
             ChatClients.Add(clientSocket.IPAddress, chatClient);
             return chatClient;
         }
 
-        private void ChatClient_OnGPSUpdated(ChatClient chatClient) => LinkingHelper.UpdateLink(chatClient);
+        private void ChatClient_OnGPSUpdated(ChatClient chatClient)
+        {
+            LinkingHelper.UpdateLink(chatClient, SearchRange);
+            chatClient.SendData(new LinkInfo(chatClient.LinkedClients.Count, SearchRange));
+        }
 
         public void RemoveClient(ClientSocket clientSocket)
         {

@@ -43,7 +43,7 @@ namespace TinyChatServer.Server.ClientProcess
         public void StartProcess()
         {
             Buffer = new byte[PacketSize];
-            Process(Buffer.Length);
+            Process(sizeof(int));
         }
 
         private void Process(int ReceiveLength)
@@ -66,7 +66,7 @@ namespace TinyChatServer.Server.ClientProcess
 
                     if (parseResult.HeaderParsed == false)
                     {
-                        Process(Buffer.Length);
+                        Process(sizeof(int) - receivedByte);
                     }
                     else if (parseResult.ContentLength == parseResult.ReceivedContentLength)
                     {
@@ -74,8 +74,8 @@ namespace TinyChatServer.Server.ClientProcess
                         System.Buffer.BlockCopy(Buffer, 0, bufferClone, 0, sizeof(int) + parseResult.ContentLength);
 
                         HeaderParsed = false;
-                        Process(Buffer.Length);
                         AsyncOnClientDataRecived?.Invoke(this, bufferClone, parseResult);
+                        Process(sizeof(int));
                     }
                     else
                     {
@@ -102,9 +102,8 @@ namespace TinyChatServer.Server.ClientProcess
                         System.Buffer.BlockCopy(ContentFullBuffer, 0, bufferClone, 0, sizeof(int) + parseResult.ContentLength);
 
                         HeaderParsed = false;
-                        Process(Buffer.Length);
-
                         AsyncOnClientDataRecived?.Invoke(this, bufferClone, parseResult);
+                        Process(sizeof(int));
                     }
                     else
                         Process(LeftContentByte);
@@ -143,7 +142,7 @@ namespace TinyChatServer.Server.ClientProcess
             try
             {
                 int bytesSent = Client.EndSend(ar);
-                AsyncOnMessageRecived?.Invoke(string.Format("Sent {0} bytes to client.", bytesSent));
+                AsyncOnMessageRecived?.Invoke(string.Format("Sent {0} bytes to client {0}.", bytesSent, IPAddress));
             }
             catch (Exception e)
             {

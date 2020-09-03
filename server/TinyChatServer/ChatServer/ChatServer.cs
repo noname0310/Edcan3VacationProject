@@ -25,6 +25,14 @@ namespace TinyChatServer.ChatServer
         public event SocketHandler OnClientDisConnect;
         public event SocketHandler OnClientDisConnected;
 
+        public IChatClientManager IChatClientManager
+        {
+            get
+            {
+                return ChatClientManager;
+            }
+        }
+
         private SocketServer SocketServer;
         private ChatClientManager ChatClientManager;
 

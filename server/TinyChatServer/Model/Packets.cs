@@ -8,7 +8,8 @@ namespace TinyChatServer.Model
         ClientConnected,
         ClientDisConnect,
         Message,
-        GPS
+        GPS,
+        LinkInfo
     }
 
     public class Packet
@@ -100,6 +101,23 @@ namespace TinyChatServer.Model
         public ClientDisConnect()
         {
             PacketType = Model.PacketType.ClientDisConnect.ToString("G");
+        }
+    }
+
+    class LinkInfo : Packet
+    {
+        public int LinkedClients;
+        public int SearchRange;
+
+        public LinkInfo()
+        {
+            PacketType = Model.PacketType.LinkInfo.ToString("G");
+        }
+
+        public LinkInfo(int linkedClients, int searchRange) : this()
+        {
+            LinkedClients = linkedClients;
+            SearchRange = searchRange;
         }
     }
 
