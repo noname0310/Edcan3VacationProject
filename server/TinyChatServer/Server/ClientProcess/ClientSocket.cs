@@ -59,6 +59,11 @@ namespace TinyChatServer.Server.ClientProcess
             try
             {
                 int receivedByte = Client.EndReceive(ar);
+                if (receivedByte == 0)
+                {
+                    AsyncOnMessageRecived?.Invoke("Error Handled, Client force disconnected");
+                    Dispose();
+                }
 
                 if (!HeaderParsed)
                 {

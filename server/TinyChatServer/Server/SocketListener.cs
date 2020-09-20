@@ -47,7 +47,15 @@ namespace TinyChatServer.Server
                     {
                         ManualResetEvent.Reset();
                         AsyncOnMessageRecived?.Invoke("Waiting for a connection...");
-                        Listener.BeginAccept(new AsyncCallback(AcceptCallback), Listener);
+                        try
+                        {
+                            Listener.BeginAccept(new AsyncCallback(AcceptCallback), Listener);
+                        }
+                        catch (ObjectDisposedException e)
+                        {
+                            AsyncOnErrMessageRecived?.Invoke(e.ToString());
+                            continue;
+                        }
                         ManualResetEvent.WaitOne();
                     }
 
@@ -85,7 +93,7 @@ namespace TinyChatServer.Server
             }
             catch (ObjectDisposedException e)
             {
-
+                AsyncOnErrMessageRecived?.Invoke(e.Message);
             }
         }
     }
